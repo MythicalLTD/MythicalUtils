@@ -1,0 +1,24 @@
+name: McPanelX-Core
+version: '${project.version}'
+main: me.mythicalsystems.mcpanelxcore.McPanelX_Core
+load: STARTUP
+authors: [NaysKutzu]
+description: A minecraft plugin to control the MCPanelX Minecraft Panel!
+website: https://mythicalsystems.me
+commands:
+  console:
+    description: Execute commands into the server console
+    aliases: [svc]
+permissions:
+  mcpanelx.version:
+    description: See the version of the plugin
+  mcpanelx.help:
+    description: Get help with the plugin
+  mcpanelx.author:
+    description: See who made the plugin
+  mcpanelx.*:
+    description: Gives access to all McPanelX core commands!
+    children:
+      mcpanelx.version: true
+      mcpanelx.help: true
+      mcoanelx.author: true
