@@ -5,10 +5,21 @@ load: STARTUP
 authors: [NaysKutzu]
 description: A minecraft plugin to control the MCPanelX Minecraft Panel!
 website: https://mythicalsystems.me
+softdepend: [PlaceholderAPI]
+depend: [LuckPerms]
 commands:
   console:
     description: Execute commands into the server console
     aliases: [svc]
+  mcpanelx:
+    description: The main command for McPanelX!
+    aliases: [mpx]
+  haxdex:
+    description: Hacker motherfucker
+    aliases: [hax]
+    permission: mcpanelx.haxdex
+  chatformater:
+    aliases: [lpc, ctf]
 permissions:
   mcpanelx.version:
     description: See the version of the plugin
@@ -16,9 +27,18 @@ permissions:
     description: Get help with the plugin
   mcpanelx.author:
     description: See who made the plugin
+  mcpanelx.haxdex:
+    description: Just a easter egg :)
+  mcpanelx.colorcodes:
+    description: Allows players to type in chat with colors!
+  mcpanelx.rgbcodes:
+    description: Allows you to type in the chat with RGB codes!
   mcpanelx.*:
     description: Gives access to all McPanelX core commands!
     children:
       mcpanelx.version: true
       mcpanelx.help: true
       mcoanelx.author: true
+      mcpanelx.haxdex: true
+      mcpanelx.rgbcodes: true
+      mcpanelx.colorcodes: true

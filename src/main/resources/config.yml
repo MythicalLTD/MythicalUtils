@@ -1,3 +1,5 @@
+Panel:
+  server_name: Lobby
 ConsolePlayers:
   - NaysKutzu
   - Alice152
@@ -8,8 +10,9 @@ Messages:
   # Prefix
   Prefix: "&c&lNoxl&f&lCraft &7>"
   NoPermission: "You do not have any permissions to run this command!"
+  OnlyForPlayers: "This command is only for ingame players!"
   # Console
-  Syntax: "Use: /console [Command]"
+  ConsoleSyntax: "Use: /console [Command]"
   LockedCommand: "This command is blocked!"
   Complete: "The command has been executed in the server console!!"
   # Join Messages
@@ -23,4 +26,24 @@ Database:
   port: 3306
   username: "root"
   password: ""
-  database: ""
+  database: "mcpanelx"
+
+ChatFormater:
+  # Placeholders:
+  # {message} - the chat message
+  # {name} - the player's name
+  # {displayname} - the player's display name / nickname
+  # {world} - the world name of the player's current world
+  # {prefix} - the player's highest priority prefix
+  # {suffix} - the player's highest priority suffix
+  # {prefixes} - the player's prefixes sorted by the highest priority
+  # {suffixes} - the player's suffixes sorted by the highest priority
+  # {username-color} - the player's or the group's username color
+  # {message-color} - the player's or the group's message color
+  #
+  # To reload the configuration restart your server!
+  chat-format: "{prefix}{name}&r: {message}"
+
+  group-formats:
+  #  default: "[default] {name}&r: {message}"
+  #  admin: "[admin] {name}&r: {message}"

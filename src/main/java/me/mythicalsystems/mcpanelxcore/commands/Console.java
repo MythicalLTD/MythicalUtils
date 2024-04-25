@@ -1,24 +1,26 @@
-package me.mythicalsystems.mcpanelxcore;
+package me.mythicalsystems.mcpanelxcore.commands;
 
+import me.mythicalsystems.mcpanelxcore.Log;
+import me.mythicalsystems.mcpanelxcore.McPanelX_Core;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class ConsoleCMD implements CommandExecutor {
-    public boolean onCommand(CommandSender sender, Command cmd, String lebal, String[] args) {
+public class Console implements CommandExecutor {
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(McPanelX_Core.getPrefix() + " for players.");
+            sender.sendMessage(McPanelX_Core.getPrefix() + McPanelX_Core.config.getString("Messages.OnlyForPlayers"));
             return true;
         }
         Player p = (Player)sender;
         if (!McPanelX_Core.config.getStringList("ConsolePlayers").contains(p.getName())) {
-            p.sendMessage(McPanelX_Core.getPrefix() + " " + McPanelX_Core.config.getString("Messages.NoPermission").replace("&", ""));
+            p.sendMessage(McPanelX_Core.getPrefix() + " " + McPanelX_Core.config.getString("Messages.NoPermission").replace("&", "§"));
             return true;
         }
         if (args.length == 0) {
-            p.sendMessage(McPanelX_Core.getPrefix() + " " + McPanelX_Core.config.getString("Messages.Syntax").replace("&", ""));
+            p.sendMessage(McPanelX_Core.getPrefix() + " " + McPanelX_Core.config.getString("Messages.ConsoleSyntax").replace("&", "§"));
             return true;
         }
         StringBuilder st = new StringBuilder();
@@ -27,12 +29,12 @@ public class ConsoleCMD implements CommandExecutor {
         String command = st.toString().replace("/", "");
         for (String str : McPanelX_Core.config.getStringList("LockedConsoleCommands")) {
             if (command.toLowerCase().contains(str.toLowerCase())) {
-                p.sendMessage(McPanelX_Core.getPrefix() + " " + McPanelX_Core.config.getString("Messages.LockedCommand").replace("&", ""));
+                p.sendMessage(McPanelX_Core.getPrefix() + " " + McPanelX_Core.config.getString("Messages.LockedCommand").replace("&", "§"));
                 return true;
             }
         }
         Bukkit.dispatchCommand((CommandSender)Bukkit.getConsoleSender(), command);
-        p.sendMessage(McPanelX_Core.getPrefix() + " " + McPanelX_Core.config.getString("Messages.Complete").replace("%cmd%", command).replace("&", ""));
+        p.sendMessage(McPanelX_Core.getPrefix() + " " + McPanelX_Core.config.getString("Messages.Complete").replace("%cmd%", command).replace("&", "§"));
         Log.Send(p, command);
         return false;
     }
