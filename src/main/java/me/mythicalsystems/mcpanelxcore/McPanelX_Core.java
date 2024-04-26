@@ -4,10 +4,7 @@ import me.mythicalsystems.mcpanelxcore.commands.ChatFormater;
 import me.mythicalsystems.mcpanelxcore.commands.Console;
 import me.mythicalsystems.mcpanelxcore.commands.HaxDex;
 import me.mythicalsystems.mcpanelxcore.commands.McPanelX;
-import me.mythicalsystems.mcpanelxcore.events.AntiUserSteal;
-import me.mythicalsystems.mcpanelxcore.events.ChatFormat;
-import me.mythicalsystems.mcpanelxcore.events.ChatSaveEvent;
-import me.mythicalsystems.mcpanelxcore.events.JoinEventHandler;
+import me.mythicalsystems.mcpanelxcore.events.*;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -79,15 +76,32 @@ public final class McPanelX_Core extends JavaPlugin {
         plugin = (Plugin)this;
 
         //Index the console command!
-        getCommand("console").setExecutor(new Console());
-        getCommand("mcpanelx").setExecutor(new McPanelX());
         getCommand("haxdex").setExecutor(new HaxDex());
-        getCommand("chatformater").setExecutor(new ChatFormater());
 
-        getServer().getPluginManager().registerEvents(new JoinEventHandler(), (Plugin)this);
+        if (config.getBoolean("InGameConsole.enabled") == true) {
+            getCommand("console").setExecutor(new Console());
+        }
+        if (config.getBoolean("CustomJoinMessage.enabled") == true) {
+            getServer().getPluginManager().registerEvents(new JoinEventHandler(), (Plugin)this);
+        }
+        if (config.getBoolean("AntiSyntax.enabled") == true) {
+            getServer().getPluginManager().registerEvents(new SyntaxBlocker(), (Plugin)this);
+        }
+        if (config.getBoolean("ChatFormater.enabled") == true) {
+            getServer().getPluginManager().registerEvents(new ChatFormat(), (Plugin) this);
+            getCommand("chatformater").setExecutor(new ChatFormater());
+        }
+        if (config.getBoolean("Database.enabled") == true) {
+            getCommand("mcpanelx").setExecutor(new McPanelX());
+            getServer().getPluginManager().registerEvents(new ChatSaveEvent(database), (Plugin)this);
+            getServer().getPluginManager().registerEvents(new CommandSaveEvent(database), (Plugin)this);
+            getServer().getPluginManager().registerEvents(new ConsoleSaveCommand(database), (Plugin)this);
+        }
+
+        if (config.getBoolean("CommandBlocker.enabled") == true) {
+            getServer().getPluginManager().registerEvents(new ConsoleCommandBlock(), (Plugin)this);
+        }
         getServer().getPluginManager().registerEvents(new AntiUserSteal(), (Plugin)this);
-        getServer().getPluginManager().registerEvents(new ChatSaveEvent(database), (Plugin)this);
-        getServer().getPluginManager().registerEvents(new ChatFormat(), (Plugin)this);
 
         getLogger().info("#========================================#");
         getLogger().info("");
@@ -117,16 +131,15 @@ public final class McPanelX_Core extends JavaPlugin {
             Player p = (Player) sender;
             p.sendMessage(message);
         } else {
-            Bukkit.getLogger().info(ChatColor.stripColor(McPanelX_Core.config.getString("Messages.OnlyForPlayers")));
+            Bukkit.getLogger().info(colorize("[McPanelX] "+message));
         }
     }
 
     /**
-     * The methods we run at the disconnection of the plugin!
+     * The thing that I run to stop the plugin!
      */
     @Override
     public void onDisable() {
-        //TODO: Disconnect from MySQL
         getLogger().info("#========================================#");
         getLogger().info("");
         getLogger().info("      McPanelX v"+getVersion());
@@ -135,9 +148,16 @@ public final class McPanelX_Core extends JavaPlugin {
         getLogger().info("#========================================#");
     }
 
+    /**
+     * Add colors ;)
+     * @param message The message you want to colorize
+     *
+     * @return The new colored message!
+     */
     public static String colorize(final String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
+
     public static String translateHexColorCodes(final String message) {
         final char colorChar = ChatColor.COLOR_CHAR;
 

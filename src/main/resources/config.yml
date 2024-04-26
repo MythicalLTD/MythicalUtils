@@ -1,11 +1,16 @@
 Panel:
   server_name: Lobby
+  console_name: System
 ConsolePlayers:
   - NaysKutzu
   - Alice152
   - Alexutzerion5
 LockedConsoleCommands:
   - plugman
+  - stop
+  - restart
+LockedPlayerCommands:
+  - lp
 Messages:
   # Prefix
   Prefix: "&c&lNoxl&f&lCraft &7>"
@@ -20,8 +25,26 @@ Messages:
   LeaveMessage: "%player% has left the server!"
   # AntiUserSteal
   AntiUserSteal: "Why you trying to steal an user account?"
+  # AntiSyntax
+  AntiSyntax: "Sorry, but you can't use direct plugin syntax on the server"
 
+# Should we let users form the ConsolePlayers use their console?
+InGameConsole:
+  enabled: true
+
+# Should we disable /<pluginname>:<command> from the server?
+AntiSyntax:
+  enabled: true
+# Should we display custom join messages?
+CustomJoinMessage:
+  enabled: true
+
+# Should we enable command blockers for console/players/remote connections?
+CommandBlocker:
+  enabled: true
+# Should we enable saving the messages/commands in the database?
 Database:
+  enabled: true
   host: 127.0.0.1
   port: 3306
   username: "root"
@@ -29,6 +52,7 @@ Database:
   database: "mcpanelx"
 
 ChatFormater:
+  enabled: true
   # Placeholders:
   # {message} - the chat message
   # {name} - the player's name
