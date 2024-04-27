@@ -9,8 +9,6 @@ LockedConsoleCommands:
   - plugman
   - stop
   - restart
-LockedPlayerCommands:
-  - lp
 Messages:
   # Prefix
   Prefix: "&c&lNoxl&f&lCraft &7>"
@@ -39,7 +37,7 @@ AntiSyntax:
 CustomJoinMessage:
   enabled: true
 
-# Should we enable command blockers for console/players/remote connections?
+# Should we enable command blockers for console/remote connections?
 CommandBlocker:
   enabled: true
 # Should we enable saving the messages/commands in the database?

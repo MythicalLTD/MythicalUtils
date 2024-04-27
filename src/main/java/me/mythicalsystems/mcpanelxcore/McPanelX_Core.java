@@ -101,7 +101,10 @@ public final class McPanelX_Core extends JavaPlugin {
         if (config.getBoolean("CommandBlocker.enabled") == true) {
             getServer().getPluginManager().registerEvents(new ConsoleCommandBlock(), (Plugin)this);
         }
+
+        getServer().getPluginManager().registerEvents(new AntiDisconnectSpam(), (Plugin)this);
         getServer().getPluginManager().registerEvents(new AntiUserSteal(), (Plugin)this);
+        getServer().getPluginManager().registerEvents(new PlayTime(), (Plugin)this);
 
         getLogger().info("#========================================#");
         getLogger().info("");
