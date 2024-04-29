@@ -15,6 +15,7 @@ import java.io.File;
 import org.bukkit.plugin.Plugin;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -104,7 +105,7 @@ public final class McPanelX_Core extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new AntiDisconnectSpam(), (Plugin)this);
         getServer().getPluginManager().registerEvents(new AntiUserSteal(), (Plugin)this);
-        getServer().getPluginManager().registerEvents(new PlayTime(), (Plugin)this);
+        getServer().getPluginManager().registerEvents(new PlayTime(database), (Plugin)this);
 
         getLogger().info("#========================================#");
         getLogger().info("");
@@ -177,6 +178,16 @@ public final class McPanelX_Core extends JavaPlugin {
         }
 
         return matcher.appendTail(buffer).toString();
+    }
+
+    /**
+     * Get a player using its uuid
+     *
+     * @param uuid The uuid of the player
+     * @return
+     */
+    public static Player getPlayerByUUID(UUID uuid) {
+        return (Player)Bukkit.getOfflinePlayer(uuid);
     }
 
 }

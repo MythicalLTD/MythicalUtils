@@ -2,6 +2,10 @@ package me.mythicalsystems.mcpanelxcore.database;
 
 import me.mythicalsystems.mcpanelxcore.McPanelX_Core;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
+import java.net.InetSocketAddress;
 import java.sql.*;
 import java.util.UUID;
 
@@ -38,7 +42,7 @@ public class connection {
     public void initializeDatabase() throws  SQLException {
         Statement statement = getConnection().createStatement();
         String sql = "CREATE TABLE IF NOT EXISTS `"+McPanelX_Core.config.getString("Database.database")+"`.`mcpanelx_core_logs` (`id` INT NOT NULL AUTO_INCREMENT , `uuid` TEXT NOT NULL , `name` TEXT NOT NULL , `server_name` TEXT NOT NULL, `type` ENUM('command','chat') NOT NULL , `value` TEXT NOT NULL , `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;";
-        String sql2 = "CREATE TABLE IF NOT EXISTS `"+McPanelX_Core.config.getString("Database.database")+"`.`mcpanelx_core_users` (`id` INT NOT NULL AUTO_INCREMENT , `uuid` TEXT NOT NULL , `name` TEXT NOT NULL , `server_name` TEXT NOT NULL , `online` ENUM('offline','online') NOT NULL , `value` INT NOT NULL , `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;";
+        String sql2 = "CREATE TABLE IF NOT EXISTS `"+McPanelX_Core.config.getString("Database.database")+"`.`mcpanelx_core_users` (`id` INT NOT NULL AUTO_INCREMENT , `uuid` TEXT NOT NULL , `name` TEXT NOT NULL , `server_name` TEXT NOT NULL , `online` ENUM('offline','online') NOT NULL , `value` INT NOT NULL , `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, `joinned_date_last` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;";
         statement.execute(sql);
         statement.execute(sql2);
         statement.close();
@@ -114,21 +118,61 @@ public class connection {
         if (uuid == null) {
             return 0;
         }
-
-        String sql = "SELECT SUM(value) AS playtime_seconds FROM `mcpanelx_core_users` WHERE `uuid` = ?";
-        PreparedStatement statement = connection.prepareStatement(sql);
-        statement.setString(1, uuid.toString());
-        try (ResultSet results = statement.executeQuery()) {
-            if (results.next()) {
-                return results.getInt("playtime_seconds");
-            } else {
-                return 0;
+        if (doesUserExist(uuid) == true) {
+            String sql = "SELECT SUM(value) AS playtime_seconds FROM `mcpanelx_core_users` WHERE `uuid` = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, uuid.toString());
+            try (ResultSet results = statement.executeQuery()) {
+                if (results.next()) {
+                    int nPlayTime = results.getInt("playtime_seconds");
+                    return nPlayTime;
+                } else {
+                    return 0;
+                }
+            } finally {
+                statement.close();
             }
-        } finally {
-            statement.close();
+        } else {
+            return 0;
         }
     }
 
+    /**
+     * Checks if a user is valid (ONJOIN)
+     *
+     * @param player The player
+     *
+     * @throws SQLException
+     * @return void
+     */
+    public void ValidUser(Player player) throws SQLException
+    {
+        if (player == null) {
+            Bukkit.getLogger().info("[McPanelX] Failed to find the user due to no uuid given");
+        }
+        if (doesUserExist(player.getUniqueId()) == true) {
+            Bukkit.getLogger().info("[McPanelX] Player "+player.getName()+ " is a valid player inside our database!");
+        } else {
+            CreatePlayer(player);
+        }
+    }
+
+    public void CreatePlayer(Player player) throws SQLException {
+        String sql = "INSERT INTO `mcpanelx_core_users` (`uuid`, `name`, `server_name`, `online`, `value`) VALUES (?, ?, ?, ?, ?);";
+        PreparedStatement statement = getConnection().prepareStatement(sql);
+        statement.setString(1, player.getUniqueId().toString());
+        statement.setString(2, player.getName());
+        statement.setString(3, McPanelX_Core.config.getString("Panel.server_name"));
+        statement.setString(4, "online");
+        statement.setInt(5, 0);
+
+        try {
+            statement.execute();
+        } catch (Exception e) {
+            Bukkit.getLogger().info("[McPanelX-Core] Cannot insert command log! "+e.toString());
+        }
+        statement.close();
+    }
     /**
      * Looks if a user exists inside the database!
      *
@@ -171,17 +215,20 @@ public class connection {
         if (uuid == null) {
             Bukkit.getLogger().info("[McPanelX] Failed to update seconds due to the UUID being null!");
         }
-        String sql = "UPDATE `mcpanelx_core_users` SET `value` = ? WHERE `mcpanelx_core_users`.`uuid` = ?";
-        PreparedStatement statement = getConnection().prepareStatement(sql);
-        statement.setString(1, uuid.toString());
-        statement.setInt(2,longToIntCast(seconds));
-        try {
-            statement.execute();
-        } catch (Exception e) {
-            Bukkit.getLogger().info("[McPanelX-Core] Cannot insert command log! "+e.toString());
+        if (doesUserExist(uuid) == true) {
+            String sql = "UPDATE `mcpanelx_core_users` SET `value` = ? WHERE `mcpanelx_core_users`.`uuid` = ?";
+            PreparedStatement statement = getConnection().prepareStatement(sql);
+            statement.setObject(1, uuid);  // Set UUID directly
+            statement.setInt(2, longToIntCast(seconds));
+            try {
+                statement.execute();
+            } catch (Exception e) {
+                Bukkit.getLogger().info("[McPanelX-Core] Cannot set playtime in the database! " + e.getMessage());
+            }
+            statement.close();
         }
-        statement.close();
     }
+
 
     /**
      * Set a player as offline
@@ -228,17 +275,30 @@ public class connection {
                 Bukkit.getLogger().info("[McPanelX-Core] Cannot update database! "+e.toString());
             }
             statement.close();
+        } else {
+            ValidUser(McPanelX_Core.getPlayerByUUID(uuid));
         }
     }
 
     /**
      * Convert a long to an int
      *
-     * @param number The nummber you want to convert!
+     * @param number The number you want to convert!
      *
      * @return The int
      */
     public int longToIntCast(long number) {
         return (int) number;
+    }
+
+    /**
+     * Convert an int to a long
+     * @param number The number you want to convert!
+     *
+     * @return the long
+     *
+     */
+    public long intToLongCast(int number) {
+        return (long) number;
     }
 }
