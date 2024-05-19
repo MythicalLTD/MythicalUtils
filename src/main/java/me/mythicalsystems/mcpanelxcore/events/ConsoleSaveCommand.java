@@ -10,15 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerCommandEvent;
 
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
 
 public class ConsoleSaveCommand implements Listener {
 

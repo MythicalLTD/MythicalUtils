@@ -1,5 +1,6 @@
 package me.mythicalsystems.mcpanelxcore.events;
 
+import me.mythicalsystems.mcpanelxcore.McPanelX_Core;
 import me.mythicalsystems.mcpanelxcore.database.connection;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -22,6 +23,16 @@ public class ChatSaveEvent implements Listener {
     public void LogChat(final AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         if (player != null) {
+            if (McPanelX_Core.isChatLocked == true) {
+                if (player.hasPermission("mcpanelxcore.chatlock.bypass")) {
+                    return;
+                } else {
+                    player.sendMessage(McPanelX_Core.colorize(McPanelX_Core.getPrefix() + McPanelX_Core.config.getString("Messages.ChatLockedPlayer")));
+                    event.setCancelled(true);
+                    return;
+                }
+
+            }
             String message = event.getMessage();
             String playerName = player.getName();
             String playerUUID = player.getUniqueId().toString();
@@ -29,10 +40,12 @@ public class ChatSaveEvent implements Listener {
                 if (database != null) {
                     database.insertChatLog(playerName, playerUUID, message);
                 } else {
-                    Bukkit.getLogger().severe("[McPanelX-Core] Database connection not initialized! Chat logging disabled.");
+                    Bukkit.getLogger()
+                            .severe("[McPanelX-Core] Database connection not initialized! Chat logging disabled.");
                 }
             } catch (SQLException e) {
-                Bukkit.getLogger().info("[McPanelX-Core] Failed to insert player chat into database: \n" + e.toString());
+                Bukkit.getLogger()
+                        .info("[McPanelX-Core] Failed to insert player chat into database: \n" + e.toString());
             }
         }
     }

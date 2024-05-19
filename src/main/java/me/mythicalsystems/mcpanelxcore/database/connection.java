@@ -2,10 +2,8 @@ package me.mythicalsystems.mcpanelxcore.database;
 
 import me.mythicalsystems.mcpanelxcore.McPanelX_Core;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.net.InetSocketAddress;
 import java.sql.*;
 import java.util.UUID;
 
@@ -18,18 +16,22 @@ public class connection {
      * @return Connection
      * @throws SQLException
      */
-    public Connection getConnection() throws  SQLException {
+    public Connection getConnection() throws SQLException {
         if (connection != null) {
             return connection;
         }
 
-        String url = "jdbc:mysql://" + McPanelX_Core.config.getString("Database.host")+"/"+McPanelX_Core.config.getString("Database.database");
+        String host = McPanelX_Core.config.getString("Database.host");
+        int port = McPanelX_Core.config.getInt("Database.port");
+        String database = McPanelX_Core.config.getString("Database.database");
+        String url = "jdbc:mysql://" + host + ":" + port + "/" + database;
         String user = McPanelX_Core.config.getString("Database.username");
         String password = McPanelX_Core.config.getString("Database.password");
 
-        Connection connection = DriverManager.getConnection(url,user,password);
+        Connection connection = DriverManager.getConnection(url, user, password);
         this.connection = connection;
-        Bukkit.getLogger().info("[MCPanelX-Core] Connected to the MySQL server!");
+        Bukkit.getLogger().info("[MCPanelX-Core] Connected to the MySQL "
+                + McPanelX_Core.config.getString("Database.host") + " server!");
         return connection;
     }
 
@@ -39,10 +41,12 @@ public class connection {
      *
      * @throws SQLException
      */
-    public void initializeDatabase() throws  SQLException {
+    public void initializeDatabase() throws SQLException {
         Statement statement = getConnection().createStatement();
-        String sql = "CREATE TABLE IF NOT EXISTS `"+McPanelX_Core.config.getString("Database.database")+"`.`mcpanelx_core_logs` (`id` INT NOT NULL AUTO_INCREMENT , `uuid` TEXT NOT NULL , `name` TEXT NOT NULL , `server_name` TEXT NOT NULL, `type` ENUM('command','chat') NOT NULL , `value` TEXT NOT NULL , `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;";
-        String sql2 = "CREATE TABLE IF NOT EXISTS `"+McPanelX_Core.config.getString("Database.database")+"`.`mcpanelx_core_users` (`id` INT NOT NULL AUTO_INCREMENT , `uuid` TEXT NOT NULL , `name` TEXT NOT NULL , `server_name` TEXT NOT NULL , `online` ENUM('offline','online') NOT NULL , `value` INT NOT NULL , `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, `joinned_date_last` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;";
+        String sql = "CREATE TABLE IF NOT EXISTS `" + McPanelX_Core.config.getString("Database.database")
+                + "`.`mcpanelx_core_logs` (`id` INT NOT NULL AUTO_INCREMENT , `uuid` TEXT NOT NULL , `name` TEXT NOT NULL , `server_name` TEXT NOT NULL, `type` ENUM('command','chat') NOT NULL , `value` TEXT NOT NULL , `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;";
+        String sql2 = "CREATE TABLE IF NOT EXISTS `" + McPanelX_Core.config.getString("Database.database")
+                + "`.`mcpanelx_core_users` (`id` INT NOT NULL AUTO_INCREMENT , `uuid` TEXT NOT NULL , `name` TEXT NOT NULL , `server_name` TEXT NOT NULL , `online` ENUM('offline','online') NOT NULL , `value` INT NOT NULL , `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`id`)) ENGINE = InnoDB;";
         statement.execute(sql);
         statement.execute(sql2);
         statement.close();
@@ -51,9 +55,9 @@ public class connection {
     /**
      * Insert a chat log inside the logs database
      *
-     * @param uuid The uuid of the user
+     * @param uuid     The uuid of the user
      * @param username The username of the user
-     * @param value The value you want to insert (ChatLog)
+     * @param value    The value you want to insert (ChatLog)
      *
      * @return void
      * @throws SQLException
@@ -72,7 +76,7 @@ public class connection {
         try {
             statement.execute();
         } catch (Exception e) {
-            Bukkit.getLogger().info("[McPanelX-Core] Cannot insert chat log! "+e.toString());
+            Bukkit.getLogger().info("[McPanelX-Core] Cannot insert chat log! " + e.toString());
         }
         statement.close();
     }
@@ -80,9 +84,9 @@ public class connection {
     /**
      * Insert a command log inside the log database
      *
-     * @param uuid The uuid of the player
+     * @param uuid     The uuid of the player
      * @param username The username of the player
-     * @param value The value like for example the command
+     * @param value    The value like for example the command
      *
      * @return void
      * @throws SQLException
@@ -101,7 +105,7 @@ public class connection {
         try {
             statement.execute();
         } catch (Exception e) {
-            Bukkit.getLogger().info("[McPanelX-Core] Cannot insert command log! "+e.toString());
+            Bukkit.getLogger().info("[McPanelX-Core] Cannot insert command log! " + e.toString());
         }
         statement.close();
     }
@@ -119,9 +123,10 @@ public class connection {
             return 0;
         }
         if (doesUserExist(uuid) == true) {
-            String sql = "SELECT SUM(value) AS playtime_seconds FROM `mcpanelx_core_users` WHERE `uuid` = ?";
+            String sql = "SELECT SUM(value) AS playtime_seconds FROM `mcpanelx_core_users` WHERE `uuid` = ? AND `server_name` = ? LIMIT 1";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, uuid.toString());
+            statement.setString(2, McPanelX_Core.config.getString("Panel.server_name"));
             try (ResultSet results = statement.executeQuery()) {
                 if (results.next()) {
                     int nPlayTime = results.getInt("playtime_seconds");
@@ -145,13 +150,13 @@ public class connection {
      * @throws SQLException
      * @return void
      */
-    public void ValidUser(Player player) throws SQLException
-    {
+    public void ValidUser(Player player) throws SQLException {
         if (player == null) {
             Bukkit.getLogger().info("[McPanelX] Failed to find the user due to no uuid given");
         }
         if (doesUserExist(player.getUniqueId()) == true) {
-            Bukkit.getLogger().info("[McPanelX] Player "+player.getName()+ " is a valid player inside our database!");
+            Bukkit.getLogger()
+                    .info("[McPanelX] Player " + player.getName() + " is a valid player inside our database!");
         } else {
             CreatePlayer(player);
         }
@@ -169,10 +174,11 @@ public class connection {
         try {
             statement.execute();
         } catch (Exception e) {
-            Bukkit.getLogger().info("[McPanelX-Core] Cannot insert command log! "+e.toString());
+            Bukkit.getLogger().info("[McPanelX-Core] Cannot insert command log! " + e.toString());
         }
         statement.close();
     }
+
     /**
      * Looks if a user exists inside the database!
      *
@@ -187,15 +193,15 @@ public class connection {
             Bukkit.getLogger().info("[McPanelX] Failed to find the user due to no uuid given");
             return false;
         }
-        String sql = "SELECT * FROM `mcpanelx_core_users` WHERE `uuid` = ?";
+        String sql = "SELECT * FROM `mcpanelx_core_users` WHERE `uuid` = ? AND `server_name` = ? LIMIT 1";
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setString(1, uuid.toString());
+        statement.setString(2, McPanelX_Core.config.getString("Panel.server_name"));
 
         try (ResultSet results = statement.executeQuery()) {
             return results.next();
-        } catch (SQLException ex)
-        {
-          Bukkit.getLogger().info("[McPanelX] Failed to get user status "+ex.toString());
+        } catch (SQLException ex) {
+            Bukkit.getLogger().info("[McPanelX] Failed to get user status " + ex.toString());
         } finally {
             statement.close();
         }
@@ -205,7 +211,7 @@ public class connection {
     /**
      * Set the player playtime in the database
      *
-     * @param uuid The uuid of the player
+     * @param uuid    The uuid of the player
      * @param seconds The time in seconds
      *
      * @throws SQLException
@@ -216,12 +222,14 @@ public class connection {
             Bukkit.getLogger().info("[McPanelX] Failed to update seconds due to the UUID being null!");
         }
         if (doesUserExist(uuid) == true) {
-            String sql = "UPDATE `mcpanelx_core_users` SET `value` = ? WHERE `mcpanelx_core_users`.`uuid` = ?";
+            String sql = "UPDATE `mcpanelx_core_users` SET `value` = ? WHERE `mcpanelx_core_users`.`uuid` = ? AND `server_name` = ? LIMIT 1";
             PreparedStatement statement = getConnection().prepareStatement(sql);
-            statement.setObject(1, uuid);  // Set UUID directly
-            statement.setInt(2, longToIntCast(seconds));
+            statement.setInt(1, longToIntCast(seconds));
+            statement.setString(2, uuid.toString());
+            statement.setString(3, McPanelX_Core.config.getString("Panel.server_name"));
+
             try {
-                statement.execute();
+                statement.executeUpdate();
             } catch (Exception e) {
                 Bukkit.getLogger().info("[McPanelX-Core] Cannot set playtime in the database! " + e.getMessage());
             }
@@ -229,9 +237,9 @@ public class connection {
         }
     }
 
-
     /**
      * Set a player as offline
+     * 
      * @param uuid The uuid of the player
      *
      * @return void
@@ -241,14 +249,14 @@ public class connection {
             Bukkit.getLogger().info("[McPanelX] Failed to update seconds due to the UUID being null!");
         }
         if (doesUserExist(uuid) == true) {
-            String sql = "UPDATE `mcpanelx_core_users` SET `online` = 'offline' WHERE `mcpanelx_core_users`.`uuid` = ?";
+            String sql = "UPDATE `mcpanelx_core_users` SET `online` = 'offline' WHERE `mcpanelx_core_users`.`uuid` = ? AND `server_name` = ?";
             PreparedStatement statement = getConnection().prepareStatement(sql);
             statement.setString(1, uuid.toString());
-
+            statement.setString(2, McPanelX_Core.config.getString("Panel.server_name"));
             try {
                 statement.execute();
             } catch (Exception e) {
-                Bukkit.getLogger().info("[McPanelX-Core] Cannot update the database!! "+e.toString());
+                Bukkit.getLogger().info("[McPanelX-Core] Cannot update the database!! " + e.toString());
             }
             statement.close();
         }
@@ -256,6 +264,7 @@ public class connection {
 
     /**
      * Set a player as online
+     * 
      * @param uuid The uuid of the player
      *
      * @return void
@@ -265,19 +274,68 @@ public class connection {
             Bukkit.getLogger().info("[McPanelX] Failed to update seconds due to the UUID being null!");
         }
         if (doesUserExist(uuid) == true) {
-            String sql = "UPDATE `mcpanelx_core_users` SET `online` = 'online' WHERE `mcpanelx_core_users`.`uuid` = ?";
+            String sql = "UPDATE `mcpanelx_core_users` SET `online` = 'online' WHERE `mcpanelx_core_users`.`uuid` = ? AND `server_name` = ?";
             PreparedStatement statement = getConnection().prepareStatement(sql);
             statement.setString(1, uuid.toString());
+            statement.setString(2, McPanelX_Core.config.getString("Panel.server_name"));
 
             try {
                 statement.execute();
             } catch (Exception e) {
-                Bukkit.getLogger().info("[McPanelX-Core] Cannot update database! "+e.toString());
+                Bukkit.getLogger().info("[McPanelX-Core] Cannot update database! " + e.toString());
             }
             statement.close();
         } else {
             ValidUser(McPanelX_Core.getPlayerByUUID(uuid));
         }
+    }
+
+    /**
+     * Set the player join Time
+     *
+     * @param uuid The player uuid
+     *
+     */
+    public void setPlayerJoinTime(UUID uuid) throws SQLException {
+        if (uuid == null) {
+            Bukkit.getLogger().info("[McPanelX] Failed to update join time due to the UUID being null!");
+            return;
+        }
+        if (doesUserExist(uuid)) {
+            String sql = "UPDATE `mcpanelx_core_users` SET `date` = NOW() WHERE `uuid` = ? AND `server_name` = ?";
+            PreparedStatement statement = getConnection().prepareStatement(sql);
+            statement.setString(1, uuid.toString());
+            statement.setString(2, McPanelX_Core.config.getString("Panel.server_name"));
+
+            try {
+                statement.executeUpdate();
+                Bukkit.getLogger().info("[McPanelX] Updated join time for user: " + uuid.toString());
+            } catch (SQLException e) {
+                Bukkit.getLogger().info("[McPanelX-Core] Cannot update database! " + e.toString());
+            } finally {
+                statement.close();
+            }
+        } else {
+            ValidUser(McPanelX_Core.getPlayerByUUID(uuid));
+        }
+    }
+
+    /**
+     * Mark the hole server as offline
+     * 
+     * @throws SQLException
+     */
+    public void markHoleServerAsOffline() throws SQLException {
+        String sql = "UPDATE `mcpanelx_core_users` SET `online` = 'offline' WHERE `server_name` = ?";
+        PreparedStatement statement = getConnection().prepareStatement(sql);
+        statement.setString(1, McPanelX_Core.config.getString("Panel.server_name"));
+
+        try {
+            statement.execute();
+        } catch (Exception e) {
+            Bukkit.getLogger().info("[McPanelX-Core] Cannot update database! " + e.toString());
+        }
+        statement.close();
     }
 
     /**
@@ -293,6 +351,7 @@ public class connection {
 
     /**
      * Convert an int to a long
+     * 
      * @param number The number you want to convert!
      *
      * @return the long

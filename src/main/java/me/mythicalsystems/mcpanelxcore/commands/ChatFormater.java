@@ -20,6 +20,7 @@ public class ChatFormater implements CommandExecutor {
         }
         return false;
     }
+    
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1)
             return Collections.singletonList("reload");

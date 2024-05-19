@@ -3,6 +3,7 @@ version: '${project.version}'
 main: me.mythicalsystems.mcpanelxcore.McPanelX_Core
 load: STARTUP
 authors: [NaysKutzu]
+contributors: [wikmor, demirug]
 description: A minecraft plugin to control the MCPanelX Minecraft Panel!
 website: https://mythicalsystems.me
 softdepend: [PlaceholderAPI]
@@ -10,7 +11,7 @@ depend: [LuckPerms]
 commands:
   console:
     description: Execute commands into the server console
-    aliases: [svc]
+    aliases: [svc, cex, c]
   mcpanelx:
     description: The main command for McPanelX!
     aliases: [mpx]
@@ -33,6 +34,13 @@ permissions:
     description: Allows players to type in chat with colors!
   mcpanelx.rgbcodes:
     description: Allows you to type in the chat with RGB codes!
+  mcpanelx.clearchat:
+    description: Clears the chat
+  mcpanelx.lockchat:
+    description: Locks the chat
+  mcpanelxcore.chatlock.bypass:
+    description: Allows a player to type in the chat if locked!
+
   mcpanelx.*:
     description: Gives access to all McPanelX core commands!
     children:
@@ -42,3 +50,6 @@ permissions:
       mcpanelx.haxdex: true
       mcpanelx.rgbcodes: true
       mcpanelx.colorcodes: true
+      mcpanelx.clearchat: true
+      mcpanelx.lockchat: true
+      mcpanelxcore.chatlock.bypass: true

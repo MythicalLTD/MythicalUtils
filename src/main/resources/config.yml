@@ -1,17 +1,17 @@
 Panel:
   server_name: Lobby
   console_name: System
+  port: 5888
+  java_api_key: test
 ConsolePlayers:
   - NaysKutzu
-  - Alice152
-  - Alexutzerion5
 LockedConsoleCommands:
   - plugman
   - stop
   - restart
 Messages:
   # Prefix
-  Prefix: "&c&lNoxl&f&lCraft &7>"
+  Prefix: "YourServer &7> "
   NoPermission: "You do not have any permissions to run this command!"
   OnlyForPlayers: "This command is only for ingame players!"
   # Console
@@ -25,6 +25,21 @@ Messages:
   AntiUserSteal: "Why you trying to steal an user account?"
   # AntiSyntax
   AntiSyntax: "Sorry, but you can't use direct plugin syntax on the server"
+  # AntiCheat
+  KickFly: "[MythicalAC] You are not allowed to fly!"
+  # ClearChat
+  ClearChat: "Chat has been cleared by %mcpanelx_user%!"
+  # Death Messages
+  DeathMessage: "%player% has died!"
+  # ChatLock
+  ChatLocked: "Chat has been %mcpanelx_status% by %mcpanelx_user%!"
+  ChatLockedPlayer: "Chat has been locked by an administrator!"
+  ChatLockedStatusLocked: 'Locked'
+  ChatLockedStatusUnLocked: 'Unlocked'
+  
+AntiCheat:
+  # Should we enable the AntiCheat system?
+  AntiFly: true
 
 # Should we let users form the ConsolePlayers use their console?
 InGameConsole:
@@ -33,8 +48,9 @@ InGameConsole:
 # Should we disable /<pluginname>:<command> from the server?
 AntiSyntax:
   enabled: true
-# Should we display custom join messages?
-CustomJoinMessage:
+  
+# Should we display custom join/death messages?
+CustomMessages:
   enabled: true
 
 # Should we enable command blockers for console/remote connections?
