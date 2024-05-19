@@ -3,6 +3,7 @@ Panel:
   console_name: System
   port: 5888
   java_api_key: test
+  log_connections_to_api: true
 ConsolePlayers:
   - NaysKutzu
 LockedConsoleCommands:
@@ -48,7 +49,7 @@ InGameConsole:
 # Should we disable /<pluginname>:<command> from the server?
 AntiSyntax:
   enabled: true
-  
+
 # Should we display custom join/death messages?
 CustomMessages:
   enabled: true

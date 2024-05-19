@@ -1,6 +1,8 @@
 package me.mythicalsystems.mcpanelxcore.database;
 
 import me.mythicalsystems.mcpanelxcore.McPanelX_Core;
+import me.mythicalsystems.mcpanelxcore.handlers.ProtocolVersionTranslator;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -47,8 +49,15 @@ public class connection {
                 + "`.`mcpanelx_core_logs` (`id` INT NOT NULL AUTO_INCREMENT , `uuid` TEXT NOT NULL , `name` TEXT NOT NULL , `server_name` TEXT NOT NULL, `type` ENUM('command','chat') NOT NULL , `value` TEXT NOT NULL , `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;";
         String sql2 = "CREATE TABLE IF NOT EXISTS `" + McPanelX_Core.config.getString("Database.database")
                 + "`.`mcpanelx_core_users` (`id` INT NOT NULL AUTO_INCREMENT , `uuid` TEXT NOT NULL , `name` TEXT NOT NULL , `server_name` TEXT NOT NULL , `online` ENUM('offline','online') NOT NULL , `value` INT NOT NULL , `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`id`)) ENGINE = InnoDB;";
+        String sql3 = "CREATE TABLE IF NOT EXISTS `" + McPanelX_Core.config.getString("Database.database")
+                + "`.`mcpanelx_core_versions` (`id` INT NOT NULL AUTO_INCREMENT , `uuid` TEXT NOT NULL , `version` TEXT NOT NULL , `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;";
+        String sql4 = "CREATE TABLE IF NOT EXISTS `" + McPanelX_Core.config.getString("Database.database")
+                + "`.`mcpanelx_core_brands` (`id` INT NOT NULL AUTO_INCREMENT , `uuid` TEXT NOT NULL , `name` TEXT NOT NULL , `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;";
         statement.execute(sql);
         statement.execute(sql2);
+        statement.execute(sql3);
+        statement.execute(sql4);
+
         statement.close();
     }
 
@@ -329,6 +338,30 @@ public class connection {
         String sql = "UPDATE `mcpanelx_core_users` SET `online` = 'offline' WHERE `server_name` = ?";
         PreparedStatement statement = getConnection().prepareStatement(sql);
         statement.setString(1, McPanelX_Core.config.getString("Panel.server_name"));
+
+        try {
+            statement.execute();
+        } catch (Exception e) {
+            Bukkit.getLogger().info("[McPanelX-Core] Cannot update database! " + e.toString());
+        }
+        statement.close();
+    }
+    /**
+     * Save the player version
+     * 
+     * @param uuid
+     * @param version
+     * @throws SQLException
+     */
+    public void savePlayerVersion(UUID uuid, int protocolVersionNumber) throws SQLException {
+        if (uuid == null) {
+            Bukkit.getLogger().info("[McPanelX] Failed to update join time due to the UUID being null!");
+            return;
+        }
+        String sql = "INSERT INTO `mcpanelx_core_versions` (`uuid`, `version`) VALUES (?, ?)";
+        PreparedStatement statement = getConnection().prepareStatement(sql);
+        statement.setString(1, uuid.toString());
+        statement.setString(2, ProtocolVersionTranslator.translateProtocolToString(protocolVersionNumber));
 
         try {
             statement.execute();

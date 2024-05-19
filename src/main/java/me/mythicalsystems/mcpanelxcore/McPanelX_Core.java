@@ -30,6 +30,7 @@ public final class McPanelX_Core extends JavaPlugin {
     public boolean is13Server = false;
     public boolean oldEngine = false;
     public static boolean isChatLocked;
+    private static McPanelX_Core instance;
 
     /**
      * Get the plugin version number!
@@ -45,11 +46,16 @@ public final class McPanelX_Core extends JavaPlugin {
      */
     @Override
     public void onEnable() {
+        instance = this;
         getMcVersion();
         final String pluginVersion = getDescription().getVersion();
         if (pluginVersion.contains("SNAPSHOT") || pluginVersion.contains("PRE")) {
             getLogger().warning(
                     "You are running a development build of McPanelX-Core. This version is not stable and may contain bugs.");
+                    
+        } if (pluginVersion.contains("BETA")) {
+            getLogger().warning(
+                    "You are running a beta build of McPanelX-Core. This version is not stable and may contain bugs.");
         }
         McPanelX_Core.isChatLocked = false;
         long startTime = System.currentTimeMillis();
@@ -104,9 +110,6 @@ public final class McPanelX_Core extends JavaPlugin {
         if (config.getBoolean("InGameConsole.enabled") == true) {
             getCommand("console").setExecutor(new Console());
         }
-        if (config.getBoolean("CustomMessages.enabled") == true) {
-            getServer().getPluginManager().registerEvents(new JoinEventHandler(), (Plugin) this);
-        }
         if (config.getBoolean("AntiSyntax.enabled") == true) {
             getServer().getPluginManager().registerEvents(new SyntaxBlocker(), (Plugin) this);
         }
@@ -120,6 +123,9 @@ public final class McPanelX_Core extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new CommandSaveEvent(database), (Plugin) this);
             getServer().getPluginManager().registerEvents(new ConsoleSaveCommand(database), (Plugin) this);
             getServer().getPluginManager().registerEvents(new PlayTime(database), (Plugin) this);
+            if (config.getBoolean("CustomMessages.enabled") == true) {
+                getServer().getPluginManager().registerEvents(new JoinEventHandler(database), (Plugin) this);
+            }
         }
 
         if (config.getBoolean("CommandBlocker.enabled") == true) {
@@ -304,6 +310,10 @@ public final class McPanelX_Core extends JavaPlugin {
             this.is19Server = true;
             this.oldEngine = false;
         }
+    }
+
+    public static McPanelX_Core getInstance() {
+        return instance;
     }
 
 }

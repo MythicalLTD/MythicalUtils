@@ -49,23 +49,28 @@ public class WebServer extends NanoHTTPD {
      */
     public static boolean verifyKey(IHTTPSession session) {
         try {
+            Boolean logToConsole = McPanelX_Core.config.getBoolean("Panel.log_to_console");
             String key = getAuthorizationHeader(session);
             String strKey = McPanelX_Core.config.getString("Panel.java_api_key");
             String ipAddress = session.getHeaders().get("http-client-ip");
             if (key == null) {
-                Bukkit.getLogger().info("[McPanelX-Core] [" + ipAddress
-                        + "] Tried to authorize with the plugin api but gave no key inside the headers!");
+                if (logToConsole) {
+                    Bukkit.getLogger().info("[McPanelX-Core] [" + ipAddress
+                            + "] Tried to authorize with the plugin api but gave no key inside the headers!");
+                }
                 return false;
             } else {
                 if (strKey.equals(key)) {
-                    Bukkit.getLogger().info("[McPanelX-Core] [" + ipAddress
-                            + "] Authorized with the plugin api using a valid API key!");
+                    if (logToConsole) {
+                        Bukkit.getLogger().info("[McPanelX-Core] [" + ipAddress
+                                + "] Authorized with the plugin api using a valid API key!");
+                    }
                     return true;
                 } else {
-                    Bukkit.getLogger()
-                            .info("[McPanelX-Core] [" + ipAddress
-                                    + "] Tried to authorize with the plugin api using the API key: " + key
-                                    + " but it was denied due to the key being incorrect!");
+                    if (logToConsole) {
+
+                        Bukkit.getLogger().info("[McPanelX-Core] [" + ipAddress + "] Tried to authorize with the plugin api using the API key: " + key + " but it was denied due to the key being incorrect!");
+                    }
                     return false;
                 }
             }
@@ -141,7 +146,7 @@ public class WebServer extends NanoHTTPD {
                 status = Response.Status.INTERNAL_ERROR;
             } else {
                 status = Response.Status.INTERNAL_ERROR;
-            } 
+            }
             if (status != null) {
                 return newFixedLengthResponse(status, "application/json", jsonResponse);
             } else {
