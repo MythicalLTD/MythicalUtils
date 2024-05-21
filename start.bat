@@ -14,4 +14,3 @@ cd development
 setlocal
 java -jar BungeeCord.jar
 echo Server is dead!
-pause

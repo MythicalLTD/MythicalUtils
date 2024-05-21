@@ -1,0 +1,26 @@
+Panel:
+  server_name: BungeeCord
+  console_name: GlobalSystem
+  port: 5888
+  api_key: test
+  log_to_console: false
+
+ConsolePlayers:
+  - NaysKutzu
+LockedConsoleCommands:
+  - plugman
+  - stop
+  - restart
+Messages:
+  # Prefix
+  Prefix: "YourServer &7> "
+  NoPermission: "You do not have any permissions to run this command!"
+  OnlyForPlayers: "This command is only for ingame players!"
+  # Console
+  ConsoleSyntax: "Use: /console [Command]"
+  LockedCommand: "This command is blocked!"
+  Complete: "The command has been executed in the server console!!"
+
+# Should we let users form the ConsolePlayers use their console?
+InGameConsole:
+  enabled: true
