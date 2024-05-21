@@ -1,0 +1,28 @@
+[
+  {
+    "user": {
+      "type": "player",
+      "name": "NaysKutzu",
+      "uniqueId": "dbb0d4d0-2c15-41cb-96b8-8609d1355fc3"
+    },
+    "time": 1716131714342,
+    "type": "Profiler (live)",
+    "data": {
+      "type": "url",
+      "value": "https://spark.lucko.me/kYVA5H2AHz"
+    }
+  },
+  {
+    "user": {
+      "type": "player",
+      "name": "NaysKutzu",
+      "uniqueId": "dbb0d4d0-2c15-41cb-96b8-8609d1355fc3"
+    },
+    "time": 1716061487265,
+    "type": "Profiler (live)",
+    "data": {
+      "type": "url",
+      "value": "https://spark.lucko.me/ud6C28M92O"
+    }
+  }
+]
