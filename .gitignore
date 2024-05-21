@@ -15,3 +15,8 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+/development/*.log.*
+/development/modules/*
+/development/logs/*
+/development/locations.yml
+/development/modules.yml
