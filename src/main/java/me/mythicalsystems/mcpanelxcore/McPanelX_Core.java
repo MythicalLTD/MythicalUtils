@@ -5,10 +5,15 @@ import me.mythicalsystems.mcpanelxcore.commands.Console;
 import me.mythicalsystems.mcpanelxcore.commands.HaxDex;
 import me.mythicalsystems.mcpanelxcore.commands.McPanelX;
 import me.mythicalsystems.mcpanelxcore.events.*;
+import me.mythicalsystems.mcpanelxcore.handlers.BrandHandler;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.github.retrooper.packetevents.PacketEvents;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import java.io.File;
@@ -47,6 +52,7 @@ public final class McPanelX_Core extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        
         getMcVersion();
         final String pluginVersion = getDescription().getVersion();
         if (pluginVersion.contains("SNAPSHOT") || pluginVersion.contains("PRE")) {
@@ -123,9 +129,8 @@ public final class McPanelX_Core extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new CommandSaveEvent(database), (Plugin) this);
             getServer().getPluginManager().registerEvents(new ConsoleSaveCommand(database), (Plugin) this);
             getServer().getPluginManager().registerEvents(new PlayTime(database), (Plugin) this);
-            if (config.getBoolean("CustomMessages.enabled") == true) {
-                getServer().getPluginManager().registerEvents(new JoinEventHandler(database), (Plugin) this);
-            }
+            getServer().getPluginManager().registerEvents(new JoinEventHandler(database), (Plugin) this);
+            PacketEvents.getAPI().getEventManager().registerListener(new BrandHandler(database));
         }
 
         if (config.getBoolean("CommandBlocker.enabled") == true) {

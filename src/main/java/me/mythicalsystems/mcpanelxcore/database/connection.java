@@ -371,6 +371,24 @@ public class connection {
         statement.close();
     }
 
+    public void savePlayerClientName(UUID uuid, String name) throws SQLException {
+        if (uuid == null) {
+            Bukkit.getLogger().info("[McPanelX] Failed to update join time due to the UUID being null!");
+            return;
+        }
+        String sql = "INSERT INTO `mcpanelx_core_brands` (`uuid`, `name`) VALUES (?, ?)";
+        PreparedStatement statement = getConnection().prepareStatement(sql);
+        statement.setString(1, uuid.toString());
+        statement.setString(2, name);
+
+        try {
+            statement.execute();
+        } catch (Exception e) {
+            Bukkit.getLogger().info("[McPanelX-Core] Cannot update database! " + e.toString());
+        }
+        statement.close();
+    }
+
     /**
      * Convert a long to an int
      *

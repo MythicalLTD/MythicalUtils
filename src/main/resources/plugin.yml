@@ -3,11 +3,11 @@ version: '${project.version}'
 main: me.mythicalsystems.mcpanelxcore.McPanelX_Core
 load: STARTUP
 authors: [NaysKutzu]
-contributors: [wikmor, demirug, Bobcat00]
+contributors: [wikmor, demirug, Bobcat00, Bram1903]
 description: A minecraft plugin to control the MCPanelX Minecraft Panel!
 website: https://mythicalsystems.me
-softdepend: [Vault]
-depend: [LuckPerms, ViaVersion, PlaceholderAPI, ProtocolLib]
+softdepend: [Vault, PlaceholderAPI]
+depend: [LuckPerms, ViaVersion, packetevents]
 commands:
   console:
     description: Execute commands into the server console

@@ -11,6 +11,9 @@ public class AntiDisconnectSpam implements Listener {
         if (event.getReason().equals("disconnect.spam")) {
             event.setCancelled(true);
             Bukkit.getLogger().info("Cancelled kick for " + event.getPlayer().getName() + " (disconnect.spam)");
+        } else if (event.getReason().equals("Kicked for spamming")) {
+            event.setCancelled(true);
+            Bukkit.getLogger().info("Cancelled kick for " + event.getPlayer().getName() + " (Kicked for spamming)");
         }
     }
 }
