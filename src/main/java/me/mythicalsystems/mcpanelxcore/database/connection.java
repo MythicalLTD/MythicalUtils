@@ -71,6 +71,7 @@ public class connection {
      * @return void
      * @throws SQLException
      */
+    @SuppressWarnings("null")
     public void insertChatLog(String uuid, String username, String value) throws SQLException {
         if (uuid == null || username == null || value == null) {
             Bukkit.getLogger().info("[McPanelX-Core] Cannot insert chat log with null values!");
@@ -159,6 +160,7 @@ public class connection {
      * @throws SQLException
      * @return void
      */
+    @SuppressWarnings("null")
     public void ValidUser(Player player) throws SQLException {
         if (player == null) {
             Bukkit.getLogger().info("[McPanelX] Failed to find the user due to no uuid given");
@@ -226,6 +228,7 @@ public class connection {
      * @throws SQLException
      * @return void
      */
+    @SuppressWarnings("null")
     public void setPlayTimeSeconds(UUID uuid, long seconds) throws SQLException {
         if (uuid == null) {
             Bukkit.getLogger().info("[McPanelX] Failed to update seconds due to the UUID being null!");
@@ -253,6 +256,7 @@ public class connection {
      *
      * @return void
      */
+    @SuppressWarnings("null")
     public void setPlayTimeOffline(UUID uuid) throws SQLException {
         if (uuid == null) {
             Bukkit.getLogger().info("[McPanelX] Failed to update seconds due to the UUID being null!");
@@ -278,6 +282,7 @@ public class connection {
      *
      * @return void
      */
+    @SuppressWarnings("null")
     public void setPlayTimeOnline(UUID uuid) throws SQLException {
         if (uuid == null) {
             Bukkit.getLogger().info("[McPanelX] Failed to update seconds due to the UUID being null!");

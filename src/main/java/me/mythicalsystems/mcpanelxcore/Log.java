@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class Log {
+    @SuppressWarnings("null")
     public static void Send(Player p, String st) {
         FileWriter fw = null;
         try {

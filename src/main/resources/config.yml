@@ -3,7 +3,7 @@ Panel:
   console_name: System
   port: 5888
   java_api_key: test
-  log_connections_to_api: true
+  log_to_console: true
 ConsolePlayers:
   - NaysKutzu
 LockedConsoleCommands:

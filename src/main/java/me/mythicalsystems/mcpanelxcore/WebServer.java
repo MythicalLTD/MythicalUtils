@@ -112,6 +112,7 @@ public class WebServer extends NanoHTTPD {
      *
      * @return newFixedLengthResponse
      */
+    @SuppressWarnings("unused")
     public static Response sendManualResponse(int i, String error, String message, Boolean success,
             Map<String, Object> extraContent) {
         try {
