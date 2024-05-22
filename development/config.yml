@@ -13,6 +13,7 @@ permissions:
   - bungeecord.command.ip
   - bungeecord.command.reload
   - bungeecord.command.kick
+  - mcpanelx.alert
 timeout: 30000
 log_commands: false
 network_compression_threshold: 256
