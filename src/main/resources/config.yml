@@ -3,6 +3,7 @@ Panel:
   console_name: GlobalSystem
   port: 5888
   api_key: test
+  # Should we any connection to the plugin to the console to the console?
   log_to_console: false
 
 ConsolePlayers:
@@ -30,6 +31,10 @@ Messages:
 
 # Should we let users form the ConsolePlayers use their console?
 InGameConsole:
+  enabled: true
+
+# Should we hook into the alert system and replace it with our own?
+AlertSystem:
   enabled: true
 
 # Should we block some commands from being executed in the console?

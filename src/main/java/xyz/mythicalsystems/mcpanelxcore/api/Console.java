@@ -45,13 +45,14 @@ public class Console {
             String command = params.get("command");
 
             if (command == null) {
-                return WebServer.BadRequest("Please provide a command!",null);
+                return WebServer.BadRequest("Please provide a command!", null);
             }
-            
-            McPanelX_Core.getInstance().getProxy().getPluginManager().dispatchCommand(McPanelX_Core.getInstance().getProxy().getConsole(), command);
-            return WebServer.OK("Command executed!",null);
+
+            McPanelX_Core.getInstance().getProxy().getPluginManager()
+                    .dispatchCommand(McPanelX_Core.getInstance().getProxy().getConsole(), command);
+            return WebServer.OK("Command executed!", null);
         } catch (Exception e) {
-            return WebServer.InternalServerError("Failed to execute command: " + e.getMessage(),null);
+            return WebServer.InternalServerError("Failed to execute command: " + e.getMessage(), null);
         }
     }
 }

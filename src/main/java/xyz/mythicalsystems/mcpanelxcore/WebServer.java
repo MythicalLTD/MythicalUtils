@@ -12,6 +12,7 @@ public class WebServer extends NanoHTTPD {
     public WebServer(int port) {
         super(port);
     }
+
     @Override
     public Response serve(IHTTPSession session) {
         String uri = session.getUri();
@@ -63,7 +64,10 @@ public class WebServer extends NanoHTTPD {
                 } else {
                     if (logToConsole) {
 
-                        McPanelX_Core.getInstance().getLogger().info("[McPanelX-Core] [" + ipAddress + "] Tried to authorize with the plugin api using the API key: " + key + " but it was denied due to the key being incorrect!");
+                        McPanelX_Core.getInstance().getLogger()
+                                .info("[McPanelX-Core] [" + ipAddress
+                                        + "] Tried to authorize with the plugin api using the API key: " + key
+                                        + " but it was denied due to the key being incorrect!");
                     }
                     return false;
                 }

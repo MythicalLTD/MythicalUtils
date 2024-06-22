@@ -53,7 +53,10 @@ public final class McPanelX_Core extends Plugin {
         if (cfg().getBoolean("BungeeKick.enabled") == true) {
             pm.registerListener(plugin, new BungeeKick());
         }
-        pm.registerCommand(plugin, new Alert());
+
+        if (cfg().getBoolean("AlertSystem.enabled") == true) {
+            pm.registerCommand(plugin, new Alert());
+        }
 
         try {
             McPanelX_Core.makeConfigAlternative();
@@ -191,7 +194,8 @@ public final class McPanelX_Core extends Plugin {
     public static BaseComponent[] transformString(String string) {
         if (string == null)
             throw new NullPointerException("string cannot be null");
-        return TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', McPanelX_Core.getPrefix()+ string));
+        return TextComponent
+                .fromLegacyText(ChatColor.translateAlternateColorCodes('&', McPanelX_Core.getPrefix() + string));
     }
 
     public static List<String> getBlockedCommandMessage() {
