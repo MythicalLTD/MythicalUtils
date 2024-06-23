@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.mythicalsystems</groupId>
 	<artifactId>McPanelX-Core</artifactId>
-	<version>1.0.0-BETA</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>McPanelX-Core</name>
 	<description>A minecraft plugin to control the MCPanelX Minecraft Panel!</description>

@@ -6,6 +6,7 @@
         "mcpanelxcore",
         "mythicalsystems"
     ],
-    "java.configuration.updateBuildConfiguration": "automatic",
-    "svn.ignoreMissingSvnWarning": true
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "svn.ignoreMissingSvnWarning": true,
+    "java.compile.nullAnalysis.mode": "automatic"
 }
