@@ -29,10 +29,12 @@ public class CommandSaveEvent implements Listener {
                 if (database != null) {
                     database.insertCommandLog(playerName, playerUUID, command);
                 } else {
-                    Bukkit.getLogger().severe("[McPanelX-Core] Database connection not initialized! Command logging disabled.");
+                    Bukkit.getLogger()
+                            .severe("[McPanelX-Core] Database connection not initialized! Command logging disabled.");
                 }
             } catch (SQLException e) {
-                Bukkit.getLogger().info("[McPanelX-Core] Failed to insert player command into database: \n" + e.toString());
+                Bukkit.getLogger()
+                        .info("[McPanelX-Core] Failed to insert player command into database: \n" + e.toString());
             }
         }
     }

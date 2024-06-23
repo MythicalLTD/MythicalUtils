@@ -27,7 +27,8 @@ public class ChatSaveEvent implements Listener {
                 if (player.hasPermission("mcpanelxcore.chatlock.bypass")) {
                     return;
                 } else {
-                    player.sendMessage(McPanelX_Core.colorize(McPanelX_Core.getPrefix() + McPanelX_Core.config.getString("Messages.ChatLockedPlayer")));
+                    player.sendMessage(McPanelX_Core.colorize(
+                            McPanelX_Core.getPrefix() + McPanelX_Core.config.getString("Messages.ChatLockedPlayer")));
                     event.setCancelled(true);
                     return;
                 }

@@ -4,6 +4,7 @@ Panel:
   port: 5888
   java_api_key: test
   log_to_console: true
+  
 ConsolePlayers:
   - NaysKutzu
 LockedConsoleCommands:
@@ -40,12 +41,28 @@ Messages:
   
 AntiCheat:
   # Should we enable the AntiCheat system?
-  AntiFly: true
+  enabled: true
 
 # Should we let users form the ConsolePlayers use their console?
 InGameConsole:
   enabled: true
 
+AntiDisconnectSpam:
+  # Should we enable the AntiDisconnectSpam system?
+  enabled: true
+  # How many times can a player disconnect in a certain time?
+  limit: 3
+  # How many seconds should we check for disconnects?
+  time: 10
+
+# Should we enable the Discord webhook system?
+Discord:
+  enabled: true
+  webhook: ""
+
+# Should we enable the AntiUserSteal system?
+AntiUserSteal:
+  enabled: true
 # Should we disable /<pluginname>:<command> from the server?
 AntiSyntax:
   enabled: true
@@ -66,7 +83,7 @@ Database:
   password: ""
   database: "mcpanelx"
 
-ChatFormater:
+ChatFormatter:
   enabled: true
   # Placeholders:
   # {message} - the chat message

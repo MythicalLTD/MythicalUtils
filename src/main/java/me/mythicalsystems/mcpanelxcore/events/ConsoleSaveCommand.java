@@ -21,13 +21,15 @@ public class ConsoleSaveCommand implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onConsoleCommand(final ServerCommandEvent event) {
-        if (event.getSender() instanceof BlockCommandSender) return;
+        if (event.getSender() instanceof BlockCommandSender)
+            return;
         final String command = event.getCommand().replace("\\", "\\\\");
         try {
             if (database != null) {
                 database.insertCommandLog(McPanelX_Core.config.getString("Panel.console_name"), "null", command);
             } else {
-                Bukkit.getLogger().severe("[McPanelX-Core] Database connection not initialized! Chat logging disabled.");
+                Bukkit.getLogger()
+                        .severe("[McPanelX-Core] Database connection not initialized! Chat logging disabled.");
             }
         } catch (SQLException e) {
             Bukkit.getLogger().info("[McPanelX-Core] Failed to insert player chat into database: \n" + e.toString());

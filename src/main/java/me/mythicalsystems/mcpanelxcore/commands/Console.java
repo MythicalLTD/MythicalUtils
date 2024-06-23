@@ -14,13 +14,15 @@ public class Console implements CommandExecutor {
             sender.sendMessage(McPanelX_Core.getPrefix() + McPanelX_Core.config.getString("Messages.OnlyForPlayers"));
             return true;
         }
-        Player p = (Player)sender;
+        Player p = (Player) sender;
         if (!McPanelX_Core.config.getStringList("ConsolePlayers").contains(p.getName())) {
-            p.sendMessage(McPanelX_Core.getPrefix() +McPanelX_Core.colorize(McPanelX_Core.config.getString("Messages.NoPermission")));
+            p.sendMessage(McPanelX_Core.getPrefix()
+                    + McPanelX_Core.colorize(McPanelX_Core.config.getString("Messages.NoPermission")));
             return true;
         }
         if (args.length == 0) {
-            p.sendMessage(McPanelX_Core.getPrefix() + McPanelX_Core.colorize(McPanelX_Core.config.getString("Messages.ConsoleSyntax")));
+            p.sendMessage(McPanelX_Core.getPrefix()
+                    + McPanelX_Core.colorize(McPanelX_Core.config.getString("Messages.ConsoleSyntax")));
             return true;
         }
         StringBuilder st = new StringBuilder();
@@ -29,12 +31,14 @@ public class Console implements CommandExecutor {
         String command = st.toString().replace("/", "");
         for (String str : McPanelX_Core.config.getStringList("LockedConsoleCommands")) {
             if (command.toLowerCase().contains(str.toLowerCase())) {
-                p.sendMessage(McPanelX_Core.getPrefix() + McPanelX_Core.colorize(McPanelX_Core.config.getString("Messages.LockedCommand")));
+                p.sendMessage(McPanelX_Core.getPrefix()
+                        + McPanelX_Core.colorize(McPanelX_Core.config.getString("Messages.LockedCommand")));
                 return true;
             }
         }
-        Bukkit.dispatchCommand((CommandSender)Bukkit.getConsoleSender(), command);
-        p.sendMessage(McPanelX_Core.getPrefix() + McPanelX_Core.colorize(McPanelX_Core.config.getString("Messages.Complete").replace("%cmd%", command)));
+        Bukkit.dispatchCommand((CommandSender) Bukkit.getConsoleSender(), command);
+        p.sendMessage(McPanelX_Core.getPrefix() + McPanelX_Core
+                .colorize(McPanelX_Core.config.getString("Messages.Complete").replace("%cmd%", command)));
         Log.Send(p, command);
         return false;
     }

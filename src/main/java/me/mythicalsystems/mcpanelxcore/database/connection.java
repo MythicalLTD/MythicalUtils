@@ -19,7 +19,7 @@ public class connection {
      * @throws SQLException
      */
     public Connection getConnection() throws SQLException {
-        if (connection != null) {
+        if (connection != null && !connection.isClosed()) {
             return connection;
         }
 
@@ -30,10 +30,14 @@ public class connection {
         String user = McPanelX_Core.config.getString("Database.username");
         String password = McPanelX_Core.config.getString("Database.password");
 
-        Connection connection = DriverManager.getConnection(url, user, password);
-        this.connection = connection;
-        Bukkit.getLogger().info("[MCPanelX-Core] Connected to the MySQL "
-                + McPanelX_Core.config.getString("Database.host") + " server!");
+        try {
+            connection = DriverManager.getConnection(url, user, password);
+            Bukkit.getLogger().info("[MCPanelX-Core] Connected to the MySQL server!");
+        } catch (SQLException e) {
+            Bukkit.getLogger().severe("[MCPanelX-Core] Failed to connect to the MySQL server: " + e.getMessage());
+            throw e;
+        }
+
         return connection;
     }
 
@@ -351,6 +355,7 @@ public class connection {
         }
         statement.close();
     }
+
     /**
      * Save the player version
      * 

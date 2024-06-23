@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import me.mythicalsystems.mcpanelxcore.McPanelX_Core;
@@ -24,5 +25,9 @@ public class AntiCheat implements Listener {
                 player.kickPlayer(McPanelX_Core.colorize(McPanelX_Core.config.getString("Messages.KickFly")));
             }
         }
+    }
+
+    public void onPlayerLogin(PlayerLoginEvent e) {
+        
     }
 }

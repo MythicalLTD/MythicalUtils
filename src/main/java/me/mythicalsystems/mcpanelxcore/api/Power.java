@@ -23,22 +23,21 @@ public class Power {
     public static Response HandlePUTRequest(IHTTPSession session) {
         try {
             Map<String, String> params = session.getParms();
-                String action = params.get("action");
+            String action = params.get("action");
 
-                if (action == null) {
-                    return WebServer.BadRequest("Please provide a action!", null);
-                }
+            if (action == null) {
+                return WebServer.BadRequest("Please provide a action!", null);
+            }
 
-                if (action.equals("restart")) {
-                    return RestartServer();
-                } else if (action.equals("stop")) {
-                    return StopServer();
-                }
-                else {
-                    return WebServer.BadRequest("Invalid action!", null);
-                }
+            if (action.equals("restart")) {
+                return RestartServer();
+            } else if (action.equals("stop")) {
+                return StopServer();
+            } else {
+                return WebServer.BadRequest("Invalid action!", null);
+            }
 
-            } catch (Exception e) {
+        } catch (Exception e) {
             return WebServer.InternalServerError("Failed to execute command: " + e.getMessage(), null);
         }
     }

@@ -1,11 +1,9 @@
 package me.mythicalsystems.mcpanelxcore;
 
-import me.mythicalsystems.mcpanelxcore.commands.ChatFormater;
-import me.mythicalsystems.mcpanelxcore.commands.Console;
-import me.mythicalsystems.mcpanelxcore.commands.HaxDex;
-import me.mythicalsystems.mcpanelxcore.commands.McPanelX;
+import me.mythicalsystems.mcpanelxcore.commands.*;
 import me.mythicalsystems.mcpanelxcore.events.*;
-import me.mythicalsystems.mcpanelxcore.handlers.BrandHandler;
+import me.mythicalsystems.mcpanelxcore.handlers.*;
+import me.mythicalsystems.mcpanelxcore.utils.DiscordWebhook;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -52,14 +50,15 @@ public final class McPanelX_Core extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        
+
         getMcVersion();
         final String pluginVersion = getDescription().getVersion();
         if (pluginVersion.contains("SNAPSHOT") || pluginVersion.contains("PRE")) {
             getLogger().warning(
                     "You are running a development build of McPanelX-Core. This version is not stable and may contain bugs.");
-                    
-        } if (pluginVersion.contains("BETA")) {
+
+        }
+        if (pluginVersion.contains("BETA")) {
             getLogger().warning(
                     "You are running a beta build of McPanelX-Core. This version is not stable and may contain bugs.");
         }
@@ -89,6 +88,7 @@ public final class McPanelX_Core extends JavaPlugin {
                                 + ex.toString());
             }
         }
+        DiscordWebhook.onPluginEnable();
         WebServer webServer = new WebServer(config.getInt("Panel.port"));
         try {
             webServer.start();
@@ -110,18 +110,15 @@ public final class McPanelX_Core extends JavaPlugin {
             Bukkit.getLogger().info("[MCPanelX-Core] Failed to mark all players as offline: " + e.toString());
         }
 
-        // Index the console command!
-        getCommand("haxdex").setExecutor(new HaxDex());
-
         if (config.getBoolean("InGameConsole.enabled") == true) {
             getCommand("console").setExecutor(new Console());
         }
         if (config.getBoolean("AntiSyntax.enabled") == true) {
             getServer().getPluginManager().registerEvents(new SyntaxBlocker(), (Plugin) this);
         }
-        if (config.getBoolean("ChatFormater.enabled") == true) {
+        if (config.getBoolean("ChatFormatter.enabled") == true) {
             getServer().getPluginManager().registerEvents(new ChatFormat(), (Plugin) this);
-            getCommand("chatformater").setExecutor(new ChatFormater());
+            getCommand("chatformatter").setExecutor(new ChatFormatter());
         }
         if (config.getBoolean("Database.enabled") == true) {
             getCommand("mcpanelx").setExecutor(new McPanelX());
@@ -136,15 +133,21 @@ public final class McPanelX_Core extends JavaPlugin {
         if (config.getBoolean("CommandBlocker.enabled") == true) {
             getServer().getPluginManager().registerEvents(new ConsoleCommandBlock(), (Plugin) this);
         }
-        getServer().getPluginManager().registerEvents(new AntiCheat(), (Plugin) this);
-        getServer().getPluginManager().registerEvents(new AntiDisconnectSpam(), (Plugin) this);
-        getServer().getPluginManager().registerEvents(new AntiUserSteal(), (Plugin) this);
+        if (config.getBoolean("AntiCheat.enabled") == true) {
+            getServer().getPluginManager().registerEvents(new AntiCheat(), (Plugin) this);
+        }
+        if (config.getBoolean("AntiDisconnectSpam.enabled") == true) {
+            getServer().getPluginManager().registerEvents(new AntiDisconnectSpam(), (Plugin) this);
+        }
+        if (config.getBoolean("AntiUserSteal.enabled") == true) {
+            getServer().getPluginManager().registerEvents(new AntiUserSteal(), (Plugin) this);
+        }
 
         getLogger().info("#========================================#");
         getLogger().info("");
         getLogger().info(colorize("      McPanelX v" + getVersion()));
         if (config.getBoolean("Database.enabled") == true) {
-            getLogger().info(colorize("      Database enabled&r ("
+            getLogger().info(colorize("      Database enabled ("
                     + config.getString("Database.host") + ":" + config.getString("Database.port") + ")"));
         } else {
             getLogger().info(colorize("      Database disabled"));
@@ -165,10 +168,10 @@ public final class McPanelX_Core extends JavaPlugin {
             getLogger().info(colorize("      AntiSyntax disabled"));
 
         }
-        if (config.getBoolean("ChatFormater.enabled") == true) {
-            getLogger().info(colorize("      ChatFormater enabled"));
+        if (config.getBoolean("ChatFormatter.enabled") == true) {
+            getLogger().info(colorize("      ChatFormatter enabled"));
         } else {
-            getLogger().info(colorize("      ChatFormater disabled"));
+            getLogger().info(colorize("      ChatFormatter disabled"));
         }
         getLogger().info(colorize("      AntiDisconnectSpam enabled"));
         getLogger().info(colorize("      AntiUserSteal enabled"));
@@ -178,6 +181,12 @@ public final class McPanelX_Core extends JavaPlugin {
                 colorize("      WebServer enabled on port: " + config.getInt("Panel.port")));
         getLogger().info("");
         getLogger().info("#========================================#");
+        long l1 = Runtime.getRuntime().freeMemory();
+        System.gc();
+        long l3;
+        if ((l3 = ((Runtime.getRuntime().freeMemory()) - l1) / 1024L / 1024L) > 0L)
+            getLogger().info(String.format("%d MB memory freed using Java garbage collector",
+                    new Object[] { Long.valueOf(l3) }));
     }
 
     /**
@@ -212,6 +221,7 @@ public final class McPanelX_Core extends JavaPlugin {
     public void onDisable() {
         try {
             this.database.markHoleServerAsOffline();
+            DiscordWebhook.onPluginDisable();
         } catch (SQLException e) {
             Bukkit.getLogger().info("[MCPanelX-Core] Failed to mark all players as offline: " + e.toString());
         }

@@ -8,9 +8,9 @@ public class ProtocolVersionTranslator {
             return "1.19.X";
         } else if (prot == 758 || prot == 757) {
             return "1.18.X";
-        } else if(prot == 756 || prot == 755) {
+        } else if (prot == 756 || prot == 755) {
             return "1.17.x";
-        } else if (prot == 754 || prot == 753 || prot == 751 || prot == 736 || prot == 735)  {
+        } else if (prot == 754 || prot == 753 || prot == 751 || prot == 736 || prot == 735) {
             return "1.16.x";
         } else if (prot == 578 || prot == 575 || prot == 573) {
             return "1.15.x";
@@ -30,8 +30,7 @@ public class ProtocolVersionTranslator {
             return "1.8.x";
         } else if (prot == 5 || prot == 4) {
             return "1.7.x";
-        }
-        else {
+        } else {
             return "UNKNOWN";
         }
 

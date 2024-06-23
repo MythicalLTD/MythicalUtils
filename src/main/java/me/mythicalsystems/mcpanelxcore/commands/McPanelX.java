@@ -75,7 +75,7 @@ public class McPanelX implements CommandExecutor {
                         return true;
                     }
                     @SuppressWarnings("unused")
-					String lockedBy;
+                    String lockedBy;
 
                     if (isPlayer) {
                         lockedBy = sender.getName();
@@ -100,7 +100,8 @@ public class McPanelX implements CommandExecutor {
                         return true;
                     }
                 } catch (Exception e) {
-                    McPanelX_Core.sendMessage(sender, McPanelX_Core.colorize(McPanelX_Core.getPrefix() +" &cAn error occurred while trying to lock the chat.:&r") + e);
+                    McPanelX_Core.sendMessage(sender, McPanelX_Core.colorize(
+                            McPanelX_Core.getPrefix() + " &cAn error occurred while trying to lock the chat.:&r") + e);
                     return true;
                 }
             case "author":

@@ -47,24 +47,24 @@ public class Console {
             String command = params.get("command");
 
             if (command == null) {
-                return WebServer.BadRequest("Please provide a command!",null);
+                return WebServer.BadRequest("Please provide a command!", null);
             }
-            
+
             try {
                 boolean commandResult = Bukkit.getScheduler().callSyncMethod(McPanelX_Core.plugin, () -> {
                     return Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                 }).get();
 
                 if (commandResult) {
-                    return WebServer.OK("Command executed successfully!",null);
+                    return WebServer.OK("Command executed successfully!", null);
                 } else {
-                    return WebServer.BadRequest("Failed to execute command!",null);
+                    return WebServer.BadRequest("Failed to execute command!", null);
                 }
             } catch (CommandException e) {
-                return WebServer.BadRequest("Failed to execute command: " + e.getMessage(),null);
+                return WebServer.BadRequest("Failed to execute command: " + e.getMessage(), null);
             }
         } catch (Exception e) {
-            return WebServer.InternalServerError("Failed to execute command: " + e.getMessage(),null);
+            return WebServer.InternalServerError("Failed to execute command: " + e.getMessage(), null);
         }
     }
 }

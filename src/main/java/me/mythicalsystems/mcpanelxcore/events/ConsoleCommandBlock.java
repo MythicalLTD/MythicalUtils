@@ -16,7 +16,7 @@ public class ConsoleCommandBlock implements Listener {
         if (McPanelX_Core.config.getList("LockedConsoleCommands") != null) {
             for (String blockedCommand : McPanelX_Core.config.getStringList("LockedConsoleCommands")) {
                 if (blockedCommand.equalsIgnoreCase(command)) {
-                    Bukkit.getLogger().info("[McPanelX] "+McPanelX_Core.config.getString("Messages.LockedCommand"));
+                    Bukkit.getLogger().info("[McPanelX] " + McPanelX_Core.config.getString("Messages.LockedCommand"));
                     event.setCancelled(true);
                     break;
                 }
@@ -32,7 +32,7 @@ public class ConsoleCommandBlock implements Listener {
             for (String blockedCommand : McPanelX_Core.config.getStringList("LockedConsoleCommands")) {
                 if (blockedCommand.equalsIgnoreCase(RCommand)) {
                     event.setCancelled(true);
-                    Bukkit.getLogger().info("[McPanelX] "+McPanelX_Core.config.getString("Messages.LockedCommand"));
+                    Bukkit.getLogger().info("[McPanelX] " + McPanelX_Core.config.getString("Messages.LockedCommand"));
                     break;
                 }
             }

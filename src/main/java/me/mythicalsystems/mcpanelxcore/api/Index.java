@@ -6,6 +6,6 @@ import me.mythicalsystems.mcpanelxcore.WebServer;
 public class Index {
 
     public static Response Request() {
-        return WebServer.OK("Hello, World!",null);
+        return WebServer.OK("Hello, World!", null);
     }
 }

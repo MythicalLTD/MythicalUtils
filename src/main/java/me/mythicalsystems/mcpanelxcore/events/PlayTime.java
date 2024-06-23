@@ -44,7 +44,9 @@ public class PlayTime implements Listener {
         try {
             long joinTime = joinTimeMap.getOrDefault(playerUUID, 0L);
             long playTime = System.currentTimeMillis() - joinTime;
-            int finalPlayTime = (int) (playTime / 1000) + database.getPlayTimeSeconds(playerUUID); // Convert milliseconds to seconds
+            int finalPlayTime = (int) (playTime / 1000) + database.getPlayTimeSeconds(playerUUID); // Convert
+                                                                                                   // milliseconds to
+                                                                                                   // seconds
 
             database.setPlayTimeSeconds(playerUUID, finalPlayTime);
             database.setPlayTimeOffline(playerUUID);

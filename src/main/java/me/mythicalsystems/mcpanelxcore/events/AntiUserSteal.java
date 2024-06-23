@@ -16,7 +16,8 @@ public class AntiUserSteal implements Listener {
             String V1 = e.getPlayer().getName().toLowerCase();
             String Vu = players.getName().toLowerCase();
             if (V1.equals(Vu)) {
-                e.disallow(PlayerLoginEvent.Result.KICK_OTHER, McPanelX_Core.colorize(McPanelX_Core.config.getString("Messages.AntiUserSteal")));
+                e.disallow(PlayerLoginEvent.Result.KICK_OTHER,
+                        McPanelX_Core.colorize(McPanelX_Core.config.getString("Messages.AntiUserSteal")));
             } else {
                 e.allow();
             }

@@ -36,11 +36,12 @@ public class BrandHandler extends PacketListenerAbstract {
         byte[] minusLength = new byte[data.length - 1];
         System.arraycopy(data, 1, minusLength, 0, minusLength.length);
         String brand = new String(minusLength).replace(" (Velocity)", "");
-        
+
         try {
             this.database.savePlayerClientName(event.getUser().getUUID(), brand);
         } catch (Exception e) {
-            Bukkit.getLogger().info("[McPanelX-Core] Failed to save players client name to the database: " + e.toString());
+            Bukkit.getLogger()
+                    .info("[McPanelX-Core] Failed to save players client name to the database: " + e.toString());
         }
     }
 

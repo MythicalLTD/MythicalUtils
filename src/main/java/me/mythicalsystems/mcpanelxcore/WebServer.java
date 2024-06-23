@@ -69,7 +69,10 @@ public class WebServer extends NanoHTTPD {
                 } else {
                     if (logToConsole) {
 
-                        Bukkit.getLogger().info("[McPanelX-Core] [" + ipAddress + "] Tried to authorize with the plugin api using the API key: " + key + " but it was denied due to the key being incorrect!");
+                        Bukkit.getLogger()
+                                .info("[McPanelX-Core] [" + ipAddress
+                                        + "] Tried to authorize with the plugin api using the API key: " + key
+                                        + " but it was denied due to the key being incorrect!");
                     }
                     return false;
                 }
