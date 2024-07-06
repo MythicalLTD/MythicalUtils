@@ -13,7 +13,6 @@ import xyz.mythicalsystems.mcpanelxcore.commands.Console;
 import xyz.mythicalsystems.mcpanelxcore.events.BungeeKick;
 import xyz.mythicalsystems.mcpanelxcore.events.PlayerChatListener;
 import xyz.mythicalsystems.mcpanelxcore.events.PlayerTabCompleteListener;
-import xyz.mythicalsystems.mcpanelxcore.events.SyntaxBlocker;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +47,6 @@ public final class McPanelX_Core extends Plugin {
         if (cfg().getBoolean("CommandBlocker.enabled") == true) {
             pm.registerListener(plugin, new PlayerTabCompleteListener());
             pm.registerListener(plugin, new PlayerChatListener());
-            pm.registerListener(plugin, new SyntaxBlocker());
         }
         if (cfg().getBoolean("BungeeKick.enabled") == true) {
             pm.registerListener(plugin, new BungeeKick());

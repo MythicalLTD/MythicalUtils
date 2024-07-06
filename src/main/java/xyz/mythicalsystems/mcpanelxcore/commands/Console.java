@@ -17,17 +17,19 @@ public class Console extends Command {
         if (!(sender instanceof ProxiedPlayer)) {
             sender.sendMessage(McPanelX_Core.colorize(McPanelX_Core.getPrefix()
                     + McPanelX_Core.getInstance().cfg().getString("Messages.OnlyForPlayers")));
+            return;
         }
         ProxiedPlayer p = (ProxiedPlayer) sender;
 
         if (!McPanelX_Core.getInstance().cfg().getStringList("ConsolePlayers").contains(p.getName())) {
             p.sendMessage(McPanelX_Core.colorize(
                     McPanelX_Core.getPrefix() + McPanelX_Core.getInstance().cfg().getString("Messages.NoPermission")));
+            return;
         }
         if (args.length == 0) {
             p.sendMessage(McPanelX_Core.colorize(
                     McPanelX_Core.getPrefix() + McPanelX_Core.getInstance().cfg().getString("Messages.ConsoleSyntax")));
-
+            return;
         }
         StringBuilder st = new StringBuilder();
         for (int i = 0; i < args.length; i++)
@@ -37,11 +39,13 @@ public class Console extends Command {
             if (command.toLowerCase().contains(str.toLowerCase())) {
                 sender.sendMessage(McPanelX_Core.colorize(McPanelX_Core.getPrefix()
                         + McPanelX_Core.getInstance().cfg().getString("Messages.LockedCommand")));
+                return;
             }
         }
         McPanelX_Core.getInstance().getProxy().getPluginManager()
                 .dispatchCommand(McPanelX_Core.getInstance().getProxy().getConsole(), command);
         p.sendMessage(McPanelX_Core.colorize(McPanelX_Core.getPrefix()
                 + McPanelX_Core.getInstance().cfg().getString("Messages.Complete").replace("%cmd%", command)));
+        return;
     }
 }
