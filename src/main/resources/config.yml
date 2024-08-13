@@ -1,10 +1,23 @@
 Panel:
+  # The name of the server
   server_name: BungeeCord
+  # The name of the console
   console_name: GlobalSystem
+  # The prot for the api server
   port: 5888
+  # The api key for the plugin
   api_key: test
+  # The panel url
+  panel_url: http://panel.mcpanelx.com
   # Should we any connection to the plugin to the console to the console?
   log_to_console: false
+
+Database:
+  host: localhost
+  port: 3306
+  database: mcpanelx_v2
+  username: root
+  password: ''
 
 ConsolePlayers:
   - NaysKutzu

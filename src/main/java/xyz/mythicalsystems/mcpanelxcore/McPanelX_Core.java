@@ -10,14 +10,20 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import xyz.mythicalsystems.mcpanelxcore.commands.Alert;
 import xyz.mythicalsystems.mcpanelxcore.commands.Console;
+import xyz.mythicalsystems.mcpanelxcore.commands.McPanelXCommand;
+import xyz.mythicalsystems.mcpanelxcore.drivers.MySQL;
+import xyz.mythicalsystems.mcpanelxcore.events.LoggerEvent;
+import xyz.mythicalsystems.mcpanelxcore.events.BungeeJoin;
 import xyz.mythicalsystems.mcpanelxcore.events.BungeeKick;
 import xyz.mythicalsystems.mcpanelxcore.events.PlayerChatListener;
 import xyz.mythicalsystems.mcpanelxcore.events.PlayerTabCompleteListener;
+import xyz.mythicalsystems.mcpanelxcore.helpers.UserHelper;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -55,7 +61,9 @@ public final class McPanelX_Core extends Plugin {
         if (cfg().getBoolean("AlertSystem.enabled") == true) {
             pm.registerCommand(plugin, new Alert());
         }
-
+        pm.registerListener(plugin, new BungeeJoin());
+        pm.registerCommand(plugin, new McPanelXCommand());
+        pm.registerListener(plugin, new LoggerEvent());
         try {
             McPanelX_Core.makeConfigAlternative();
         } catch (IOException e) {
@@ -89,6 +97,15 @@ public final class McPanelX_Core extends Plugin {
         McPanelX_Core.blockedCommandMessage = cfg().getStringList("CommandBlocker.blocked-command-message");
         McPanelX_Core.blockedCommandMessageAdmin = cfg().getStringList("CommandBlocker.blocked-command-message-admin");
         McPanelX_Core.blockedCommands = cfg().getStringList("CommandBlocker.blocked-commands");
+
+        MySQL mySQL = new MySQL();
+        if (mySQL.TryConnection()) {
+            getLogger().info("[McPanelX-Core] Connected to MySQL database!");
+        } else {
+            getLogger().severe("[McPanelX-Core] Failed to connect to MySQL database!");
+            getProxy().stop(pluginVersion + " failed to connect to MySQL database!");
+        }
+
         getLogger().info("#========================================#");
         getLogger().info("");
         getLogger().info(colorize("      McPanelX v" + getVersion()));
@@ -102,6 +119,11 @@ public final class McPanelX_Core extends Plugin {
 
     @Override
     public void onDisable() {
+        try {
+            UserHelper.markHoleServerAsOffline();
+        } catch (SQLException e) {
+            getLogger().severe("[McPanelX-Core] Failed to mark server as offline: " + e);
+        }
         getLogger().info("#========================================#");
         getLogger().info("");
         getLogger().info(colorize("      McPanelX v" + getVersion()));
