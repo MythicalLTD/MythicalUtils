@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import xyz.mythicalsystems.mcpanelxcore.McPanelX_Core;
 import xyz.mythicalsystems.mcpanelxcore.drivers.MySQL;
 import java.util.Base64;
 import java.util.Date;
@@ -125,23 +126,56 @@ public class UserHelper extends MySQL {
      * 
      * @throws SQLException
      */
-    public static void updateUserLastSeen(ProxiedPlayer player) throws SQLException {
+    public static void updateUserLastSeen(UUID uuid, String client_name, int i, String ip) throws SQLException {
         MySQL db = new MySQL();
         Connection conn = db.getConnection();
 
-        @SuppressWarnings("deprecation")
-        String ip = player.getAddress().getAddress().getHostAddress();
+        ProxiedPlayer player = McPanelX_Core.getInstance().getProxy().getPlayer(uuid);
+        if (player.isConnected() == false) {
+            return;
+        }
 
         String query = "UPDATE `" + MySQL.users_table + "` SET `last_seen` = CURRENT_TIMESTAMP, `last_ip` = ? WHERE `"
                 + MySQL.users_table + "`.`uuid` = ?";
         try (PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, ip);
-            statement.setString(2, player.getUniqueId().toString());
+            statement.setString(2, uuid.toString());
 
             statement.executeUpdate();
         } catch (SQLException e) {
             throw e;
         }
+
+        query = "INSERT INTO `"+MySQL.login_logs+"` (uuid, ip, client_name, client_version) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setString(1, uuid.toString());
+            statement.setString(2, ip);
+            statement.setString(3, client_name);
+            statement.setString(4, ProtocolVersionTranslator.translateProtocolToString(i));
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
+        }
+
+        query = "UPDATE `" + MySQL.users_table + "` SET `version_name` = ? WHERE `" + MySQL.users_table + "`.`uuid` = ?";
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setString(1, ProtocolVersionTranslator.translateProtocolToString(i));
+            statement.setString(2, uuid.toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
+        }
+
+        query = "UPDATE `" + MySQL.users_table + "` SET `brand_name` = ? WHERE `" + MySQL.users_table + "`.`uuid` = ?";
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setString(1, client_name);
+            statement.setString(2, uuid.toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
+        }
+
     }
 
     /**
@@ -174,6 +208,7 @@ public class UserHelper extends MySQL {
             throw e;
         }
     }
+
     /**
      * Get the user token
      * 
@@ -198,29 +233,22 @@ public class UserHelper extends MySQL {
         }
         return null;
     }
+
     /**
-     * Save the user brand name
+     * Save the user play time
      * 
-     * @param uuid UUID
-     * @param brandName Brand name
+     * @param uuid
+     * @param playTime
      * @throws SQLException
      */
-    public static void saveBrandName(UUID uuid, String brandName) throws SQLException {
+    public static void savePlayTime(UUID uuid, long playTime) throws SQLException {
         MySQL db = new MySQL();
         Connection conn = db.getConnection();
-        String query = "UPDATE `" + MySQL.users_table + "` SET `brand_name` = ? WHERE `" + MySQL.users_table + "`.`uuid` = ?";
+        String query = "UPDATE `" + MySQL.users_table + "` SET `total_seconds_played` = ? WHERE `" + MySQL.users_table
+                + "`.`uuid` = ?";
         try (PreparedStatement statement = conn.prepareStatement(query)) {
-            statement.setString(1, brandName);
+            statement.setInt(1, (int) (playTime + getTotalSecondsPlayed(uuid)));
             statement.setString(2, uuid.toString());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw e;
-        }
-
-        String query2 = "INSERT INTO `" + MySQL.brands_table + "` (uuid, value) VALUES (?, ?)";
-        try (PreparedStatement statement = conn.prepareStatement(query2)) {
-            statement.setString(1, uuid.toString());
-            statement.setString(2, brandName);
             statement.executeUpdate();
         } catch (SQLException e) {
             throw e;
@@ -228,56 +256,29 @@ public class UserHelper extends MySQL {
     }
 
     /**
-     * Get the user brand name
+     * Get the total seconds played
      * 
-     * @param uuid UUID
-     * 
-     * @return Brand name
+     * @param uuid
+     * @return long
+     * @throws SQLException
      */
-    public static String getUserBrandName(UUID uuid) throws SQLException {
+    public static long getTotalSecondsPlayed(UUID uuid) throws SQLException {
+        long totalSecondsPlayed = 0;
         MySQL db = new MySQL();
         Connection conn = db.getConnection();
-        String query = "SELECT `brand_name` FROM `" + MySQL.users_table + "` WHERE `uuid` = ?";
-        try (PreparedStatement statement = conn.prepareStatement(query)) {
+
+        String query = "SELECT `total_seconds_played` FROM `" + MySQL.users_table + "` WHERE `uuid`= ? LIMIT 1";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, uuid.toString());
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    return resultSet.getString("brand_name");
-                }
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                totalSecondsPlayed = resultSet.getInt("total_seconds_played");
             }
         } catch (SQLException e) {
             throw e;
         }
-        return null;
-    }
 
-    /**
-     * Save user version name
-     * 
-     * @param uuid UUID
-     * @param versionName Version name
-     * 
-     * @throws SQLException
-     */
-    public static void saveVersionName(UUID uuid, String versionName) throws SQLException {
-        MySQL db = new MySQL();
-        Connection conn = db.getConnection();
-        String query = "UPDATE `" + MySQL.users_table + "` SET `version_name` = ? WHERE `" + MySQL.users_table + "`.`uuid` = ?";
-        try (PreparedStatement statement = conn.prepareStatement(query)) {
-            statement.setString(1, versionName);
-            statement.setString(2, uuid.toString());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw e;
-        }
-
-        String query2 = "INSERT INTO `" + MySQL.versions_table + "` (uuid, value) VALUES (?, ?)";
-        try (PreparedStatement statement = conn.prepareStatement(query2)) {
-            statement.setString(1, uuid.toString());
-            statement.setString(2, versionName);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw e;
-        }
+        return totalSecondsPlayed;
     }
 }

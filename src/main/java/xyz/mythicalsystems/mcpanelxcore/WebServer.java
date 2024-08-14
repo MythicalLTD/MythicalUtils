@@ -50,14 +50,14 @@ public class WebServer extends NanoHTTPD {
             String ipAddress = session.getHeaders().get("http-client-ip");
             if (key == null) {
                 if (logToConsole) {
-                    McPanelX_Core.getInstance().getLogger().info("[McPanelX-Core] [" + ipAddress
+                    McPanelX_Core.getInstance().getLogger().info("[" + ipAddress
                             + "] Tried to authorize with the plugin api but gave no key inside the headers!");
                 }
                 return false;
             } else {
                 if (strKey.equals(key)) {
                     if (logToConsole) {
-                        McPanelX_Core.getInstance().getLogger().info("[McPanelX-Core] [" + ipAddress
+                        McPanelX_Core.getInstance().getLogger().info("[" + ipAddress
                                 + "] Authorized with the plugin api using a valid API key!");
                     }
                     return true;
@@ -65,7 +65,7 @@ public class WebServer extends NanoHTTPD {
                     if (logToConsole) {
 
                         McPanelX_Core.getInstance().getLogger()
-                                .info("[McPanelX-Core] [" + ipAddress
+                                .info("[" + ipAddress
                                         + "] Tried to authorize with the plugin api using the API key: " + key
                                         + " but it was denied due to the key being incorrect!");
                     }
@@ -73,7 +73,7 @@ public class WebServer extends NanoHTTPD {
                 }
             }
         } catch (Exception e) {
-            McPanelX_Core.getInstance().getLogger().info("[McPanelX-Core] Authentication error: " + e);
+            McPanelX_Core.getInstance().getLogger().info("Authentication error: " + e);
             return false;
         }
     }
@@ -93,7 +93,7 @@ public class WebServer extends NanoHTTPD {
                 return null;
             }
         } catch (Exception e) {
-            McPanelX_Core.getInstance().getLogger().info("[McPanelX-Core] Authentication error: " + e);
+            McPanelX_Core.getInstance().getLogger().info("Authentication error: " + e);
             return null;
         }
     }

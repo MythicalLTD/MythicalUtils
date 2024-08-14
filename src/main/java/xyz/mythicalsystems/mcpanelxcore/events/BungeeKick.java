@@ -12,7 +12,7 @@ import net.md_5.bungee.event.EventHandler;
 import xyz.mythicalsystems.mcpanelxcore.McPanelX_Core;
 
 public class BungeeKick implements Listener {
-    
+
     @SuppressWarnings("deprecation")
     @EventHandler(priority = 127)
     public void onServerKickEvent(ServerKickEvent ev) {
@@ -27,7 +27,8 @@ public class BungeeKick implements Listener {
                 kickedFrom = ProxyServer.getInstance()
                         .getServerInfo(ev.getPlayer().getPendingConnection().getListener().getDefaultServer());
         }
-        ServerInfo kickTo = McPanelX_Core.getInstance().getProxy().getServerInfo(McPanelX_Core.cfg().getString("BungeeKick.ServerName"));
+        ServerInfo kickTo = McPanelX_Core.getInstance().getProxy()
+                .getServerInfo(McPanelX_Core.cfg().getString("BungeeKick.ServerName"));
         if (kickedFrom != null && kickedFrom.equals(kickTo))
             return;
         ev.setCancelled(true);

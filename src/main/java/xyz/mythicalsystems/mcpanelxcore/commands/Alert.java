@@ -12,13 +12,14 @@ import xyz.mythicalsystems.mcpanelxcore.McPanelX_Core;
 
 public class Alert extends Command {
     public Alert() {
-        super("alert", "mcpanelx.alert", "broadcast", "bc", "bcast", "announce", "gsay","mcpanelx alert");
+        super("alert", "mcpanelx.alert", "broadcast", "bc", "bcast", "announce", "gsay", "mcpanelx alert");
     }
 
     @SuppressWarnings("deprecation")
     public void execute(CommandSender sender, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(McPanelX_Core.getPrefix() + McPanelX_Core.colorize(McPanelX_Core.messages().getString("Alert.YouMustSupplyAMessage")));
+            sender.sendMessage(McPanelX_Core.getPrefix()
+                    + McPanelX_Core.colorize(McPanelX_Core.messages().getString("Alert.YouMustSupplyAMessage")));
         } else {
             StringBuilder builder = new StringBuilder();
             String[] arrayOfString;

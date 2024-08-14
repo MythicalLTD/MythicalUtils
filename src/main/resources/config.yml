@@ -19,6 +19,9 @@ Database:
   username: root
   password: ''
 
+AntiUserSteal:
+  enabled: true
+
 # Logger is a system that can help McPanelX get some info about the player!
 Logger:
   enabled: true
@@ -39,10 +42,6 @@ Logger:
 # PlayTime is a system used to log how much a player has played on the server!
 PlayTime:
   enabled: true
-  # Should we log if the user is online or not?
-  isOnline: true 
-  # Should we log how much the user has played or not?
-  playTime: true
 
 # Should we let users form the ConsolePlayers use their console?
 InGameConsole:

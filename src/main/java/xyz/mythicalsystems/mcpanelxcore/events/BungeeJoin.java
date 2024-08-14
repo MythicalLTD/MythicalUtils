@@ -24,9 +24,7 @@ public class BungeeJoin implements Listener {
         try {
             if (UserHelper.isUserValid(uuid) == true) {
                 UserHelper.markUserAsOnline(uuid);
-                UserHelper.updateUserLastSeen(player);
-                UserHelper.saveVersionName(uuid, ProtocolVersionTranslator
-                        .translateProtocolToString(player.getPendingConnection().getVersion()));
+                
             } else {
                 try {
                     UserHelper.CreateUser(player.getName(), uuid,
@@ -37,8 +35,6 @@ public class BungeeJoin implements Listener {
                         return;
                     } else {
                         UserHelper.markUserAsOnline(uuid);
-                        UserHelper.updateUserLastSeen(player);
-                        UserHelper.saveVersionName(uuid, ProtocolVersionTranslator.translateProtocolToString(player.getPendingConnection().getVersion()));
                     }
                 } catch (SQLException e) {
                     player.disconnect(new TextComponent(
@@ -59,7 +55,6 @@ public class BungeeJoin implements Listener {
         ProxiedPlayer player = sve.getPlayer();
         UUID uuid = player.getUniqueId();
         try {
-            UserHelper.updateUserLastSeen(player);
             UserHelper.markUserAsOffline(uuid);
         } catch (SQLException e) {
             McPanelX_Core.getInstance().getLogger()

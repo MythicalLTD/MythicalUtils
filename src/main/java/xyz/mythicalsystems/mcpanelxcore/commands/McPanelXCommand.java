@@ -85,7 +85,7 @@ public class McPanelXCommand extends Command implements TabExecutor {
                         return;
                     } catch (SQLException e) {
                         sender.sendMessage(McPanelX_Core.colorize(McPanelX_Core.getPrefix() + McPanelX_Core.messages().getString("Global.Error")));
-                        McPanelX_Core.getInstance().getLogger().info("[McPanelX-Core] Failed to get the user token: " + e);
+                        McPanelX_Core.getInstance().getLogger().info("Failed to get the user token: " + e);
                         return;
                     }
                 case "token":
@@ -107,7 +107,7 @@ public class McPanelXCommand extends Command implements TabExecutor {
                                 return;
                             } catch (SQLException e) {
                                 sender.sendMessage(McPanelX_Core.colorize(McPanelX_Core.getPrefix() + McPanelX_Core.messages().getString("Global.Error")));
-                                McPanelX_Core.getInstance().getLogger().info("[McPanelX-Core] Failed to reset user token: " + e);
+                                McPanelX_Core.getInstance().getLogger().info("Failed to reset user token: " + e);
                                 return;
                             }
                         case "show":
@@ -127,7 +127,7 @@ public class McPanelXCommand extends Command implements TabExecutor {
                                 }
                             } catch (SQLException e) {
                                 sender.sendMessage(McPanelX_Core.colorize(McPanelX_Core.getPrefix() + McPanelX_Core.messages().getString("Global.Error")));
-                                McPanelX_Core.getInstance().getLogger().info("[McPanelX-Core] Failed to get user token: " + e);
+                                McPanelX_Core.getInstance().getLogger().info("Failed to get user token: " + e);
                                 return;
                             }
                         default:

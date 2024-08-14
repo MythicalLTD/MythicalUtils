@@ -23,12 +23,14 @@ public class Console extends Command {
 
         if (!McPanelX_Core.getInstance().cfg().getStringList("InGameConsole.Players").contains(p.getName())) {
             p.sendMessage(McPanelX_Core.colorize(
-                    McPanelX_Core.getPrefix() + McPanelX_Core.getInstance().messages().getString("Console.NoPermission")));
+                    McPanelX_Core.getPrefix()
+                            + McPanelX_Core.getInstance().messages().getString("Console.NoPermission")));
             return;
         }
         if (args.length == 0) {
             p.sendMessage(McPanelX_Core.colorize(
-                    McPanelX_Core.getPrefix() + McPanelX_Core.getInstance().messages().getString("Console.ConsoleSyntax")));
+                    McPanelX_Core.getPrefix()
+                            + McPanelX_Core.getInstance().messages().getString("Console.ConsoleSyntax")));
             return;
         }
         StringBuilder st = new StringBuilder();
@@ -48,6 +50,5 @@ public class Console extends Command {
                 + McPanelX_Core.getInstance().messages().getString("Console.Complete").replace("%cmd%", command)));
         return;
     }
-
 
 }

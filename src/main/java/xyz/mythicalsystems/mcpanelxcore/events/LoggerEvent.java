@@ -29,11 +29,11 @@ public class LoggerEvent implements Listener {
         }
         try {
             if (event.isCommand()) {
-                if (event.getMessage().startsWith("/login") 
-                    || event.getMessage().startsWith("/register")
-                    || event.getMessage().startsWith("/l") 
-                    || event.getMessage().startsWith("/changepwd")
-                    || event.getMessage().startsWith("/changepassword"))
+                if (event.getMessage().startsWith("/login")
+                        || event.getMessage().startsWith("/register")
+                        || event.getMessage().startsWith("/l")
+                        || event.getMessage().startsWith("/changepwd")
+                        || event.getMessage().startsWith("/changepassword"))
                     return;
                 if (McPanelX_Core.cfg().getBoolean("Logger.commands") == true) {
                     LoggerHelper.logCommand(player, event.getMessage());

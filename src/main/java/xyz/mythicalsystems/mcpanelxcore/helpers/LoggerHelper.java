@@ -12,7 +12,7 @@ public class LoggerHelper {
     /**
      * Log a chat message from a player
      * 
-     * @param player Player
+     * @param player  Player
      * @param message The message
      * 
      * @throws SQLException
@@ -32,10 +32,11 @@ public class LoggerHelper {
             throw e;
         }
     }
+
     /**
      * Log a command that was executed by a player
      * 
-     * @param player Player
+     * @param player  Player
      * @param command The command
      * 
      * @throws SQLException
@@ -44,7 +45,8 @@ public class LoggerHelper {
         MySQL db = new MySQL();
         Connection conn = db.getConnection();
         String serverName = player.getServer().getInfo().getName();
-        String query = "INSERT INTO " + MySQL.logs_table + " (servername, uuid, type, value) VALUES (?, ?, 'command', ?)";
+        String query = "INSERT INTO " + MySQL.logs_table
+                + " (servername, uuid, type, value) VALUES (?, ?, 'command', ?)";
 
         try (PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, serverName);

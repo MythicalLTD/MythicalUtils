@@ -16,12 +16,16 @@ import xyz.mythicalsystems.mcpanelxcore.commands.Console;
 import xyz.mythicalsystems.mcpanelxcore.commands.McPanelXCommand;
 import xyz.mythicalsystems.mcpanelxcore.drivers.MySQL;
 import xyz.mythicalsystems.mcpanelxcore.events.LoggerEvent;
+import xyz.mythicalsystems.mcpanelxcore.events.PlayTime;
+import xyz.mythicalsystems.mcpanelxcore.events.AntiUserSteal;
 import xyz.mythicalsystems.mcpanelxcore.events.BungeeJoin;
 import xyz.mythicalsystems.mcpanelxcore.events.BungeeKick;
 import xyz.mythicalsystems.mcpanelxcore.events.PlayerChatListener;
 import xyz.mythicalsystems.mcpanelxcore.events.PlayerTabCompleteListener;
 import xyz.mythicalsystems.mcpanelxcore.helpers.BrandHandler;
+import xyz.mythicalsystems.mcpanelxcore.helpers.Metrics;
 import xyz.mythicalsystems.mcpanelxcore.helpers.UserHelper;
+import xyz.mythicalsystems.mcpanelxcore.utils.PlayTimeHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +34,7 @@ import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -82,6 +87,7 @@ public final class McPanelX_Core extends Plugin {
     public static boolean alertSystemEnabled;
     public static boolean loggerEnabled;
     public static boolean playtimeEnabled;
+    public static boolean antiUserSteal; 
 
     /**
      * Called when the plugin is enabled.
@@ -106,12 +112,21 @@ public final class McPanelX_Core extends Plugin {
         }
 
         if (cfg().getBoolean("InGameConsole.enabled")) {
-            getLogger().info("[McPanelX-Core] InGameConsole is enabled!");
+            getLogger().info("InGameConsole is enabled!");
             pm.registerCommand(this, new Console());
             inGameConsoleEnabled = true;
         } else {
-            getLogger().info("[McPanelX-Core] InGameConsole is disabled!");
+            getLogger().info("InGameConsole is disabled!");
             inGameConsoleEnabled = false;
+        }
+
+        if (cfg().getBoolean("AntiUserSteal.enabled")) {
+            getLogger().info("AntiUserSteal is enabled!");
+            pm.registerListener(this, new AntiUserSteal());
+            antiUserSteal = true;
+        } else {
+            getLogger().info("AntiUserSteal is disabled!");
+            antiUserSteal = false;
         }
 
         if (cfg().getBoolean("CommandBlocker.enabled")) {
@@ -119,66 +134,72 @@ public final class McPanelX_Core extends Plugin {
             McPanelX_Core.blockedCommandMessageAdmin = messages().getStringList("CommandBlocker.blocked-message-admin");
             McPanelX_Core.blockedCommands = cfg().getStringList("CommandBlocker.blocked-commands");
             pm.registerListener(this, new PlayerTabCompleteListener());
-            pm.registerListener(this, new PlayerChatListener()); 
-            getLogger().info("[McPanelX-Core] CommandBlocker is enabled!");
+            pm.registerListener(this, new PlayerChatListener());
+            getLogger().info("CommandBlocker is enabled!");
             commandBlockerEnabled = true;
         } else {
-            getLogger().info("[McPanelX-Core] CommandBlocker is disabled!");
+            getLogger().info("CommandBlocker is disabled!");
             commandBlockerEnabled = false;
         }
 
         if (cfg().getBoolean("BungeeKick.enabled")) {
             pm.registerListener(this, new BungeeKick());
-            getLogger().info("[McPanelX-Core] BungeeKick is enabled!");
+            getLogger().info("BungeeKick is enabled!");
             bungeeKickEnabled = true;
         } else {
-            getLogger().info("[McPanelX-Core] BungeeKick is disabled!");
+            getLogger().info("BungeeKick is disabled!");
             bungeeKickEnabled = false;
         }
 
         if (cfg().getBoolean("AlertSystem.enabled")) {
             pm.registerCommand(this, new Alert());
-            getLogger().info("[McPanelX-Core] AlertSystem is enabled!");
+            getLogger().info("AlertSystem is enabled!");
             alertSystemEnabled = true;
         } else {
-            getLogger().info("[McPanelX-Core] AlertSystem is disabled!");
+            getLogger().info("AlertSystem is disabled!");
             alertSystemEnabled = false;
         }
 
         
+
         if (cfg().getBoolean("Logger.enabled")) {
             if (pm.getPlugin("packetevents") != null) {
                 pm.registerListener(this, new LoggerEvent());
-                getLogger().info("[McPanelX-Core] PacketEvents plugin is installed!");
+
+                getLogger().info("PacketEvents plugin is installed!");
                 if (cfg().getBoolean("Logger.logClientBranding")) {
                     PacketEvents.getAPI().getEventManager().registerListener(new BrandHandler());
                 }
-                getLogger().info("[McPanelX-Core] Logger is enabled!");
+                getLogger().info("Logger is enabled!");
                 loggerEnabled = true;
 
             } else {
-                getLogger().warning("[McPanelX-Core] PacketEvents plugin is not installed!");
-                getLogger().warning("[McPanelX-Core] Logger is disabled!");
+                getLogger().warning("PacketEvents plugin is not installed!");
+                getLogger().warning("Logger is disabled!");
                 loggerEnabled = false;
             }
         } else {
-            getLogger().info("[McPanelX-Core] Logger is disabled!");
+            getLogger().info("Logger is disabled!");
             loggerEnabled = false;
         }
 
         if (cfg().getBoolean(("PlayTime.enabled"))) {
-            getLogger().info("[McPanelX-Core] Playtime is enabled!");
-            pm.registerListener(this, new BungeeJoin());
+            PlayTimeHelper.onEnable();
+            getLogger().info("Playtime is enabled!");
+            pm.registerListener(this, new PlayTime());
             playtimeEnabled = true;
         } else {
-            getLogger().info("[McPanelX-Core] Playtime is disabled!");
+            getLogger().info("Playtime is disabled!");
             playtimeEnabled = false;
         }
 
         if (cfg().getBoolean("Panel.enable_panel_command")) {
             pm.registerCommand(this, new McPanelXCommand());
         }
-        
+
+        // Start bstats metrics
+        new Metrics(this, 23007);
+
         final String pluginVersion = getDescription().getVersion();
         if (pluginVersion.contains("SNAPSHOT") || pluginVersion.contains("PRE")) {
             getLogger().warning(
@@ -205,10 +226,17 @@ public final class McPanelX_Core extends Plugin {
 
         MySQL mySQL = new MySQL();
         if (mySQL.TryConnection()) {
-            getLogger().info("[McPanelX-Core] Connected to MySQL database!");
+            getLogger().info("Connected to MySQL database!");
         } else {
-            getLogger().severe("[McPanelX-Core] Failed to connect to MySQL database!");
+            getLogger().severe("Failed to connect to MySQL database!");
             getProxy().stop(pluginVersion + " failed to connect to MySQL database!");
+        }
+        pm.registerListener(this, new BungeeJoin());
+
+        try {
+            UserHelper.markHoleServerAsOffline();
+        } catch (SQLException e) {
+            getLogger().severe("Failed to mark server as offline: " + e);
         }
 
         getLogger().info("#========================================#");
@@ -248,13 +276,27 @@ public final class McPanelX_Core extends Plugin {
         } else {
             getLogger().info(colorize("      Playtime disabled!"));
         }
+        if (antiUserSteal) {
+            getLogger().info(colorize("      AntiUserSteal enabled!"));
+        } else {
+            getLogger().info(colorize("      AntiUserSteal disabled!"));
+        }
         getLogger().info("");
         getLogger().info("#========================================#");
         if (cfg().getBoolean("Logger.enabled") == true && loggerEnabled == false) {
             for (int i = 0; i < 25; i++) {
                 getLogger().severe("Logger is enabled but PacketEvents is not installed! (Logger will not work)");
             }
-        } 
+        }
+        // Schedule the task to run every 5 minutes
+        getProxy().getScheduler().schedule(this, this::onEvery5Minutes, 0, 5, TimeUnit.MINUTES);
+    }
+
+    /**
+     * Tasks to run every 5 minutes!
+     */
+    public void onEvery5Minutes() {
+        
     }
 
     /**
@@ -265,7 +307,7 @@ public final class McPanelX_Core extends Plugin {
         try {
             UserHelper.markHoleServerAsOffline();
         } catch (SQLException e) {
-            getLogger().severe("[McPanelX-Core] Failed to mark server as offline: " + e);
+            getLogger().severe("Failed to mark server as offline: " + e);
         }
         getLogger().info("#========================================#");
         getLogger().info("");
@@ -274,6 +316,7 @@ public final class McPanelX_Core extends Plugin {
         getLogger().info("");
         getLogger().info("#========================================#");
     }
+
     /**
      * Reload the plugin
      */

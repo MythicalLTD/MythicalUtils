@@ -10,6 +10,10 @@ Global:
   SecondaryColor: "&d"
   BasicColor: "&7"
 
+AntiUserSteal:
+    Message: "Why you trying to steal an user account?"
+
+
 Help: 
   help: "Show this help message!"
   reload: "Reload the McPanelX configuration!"
