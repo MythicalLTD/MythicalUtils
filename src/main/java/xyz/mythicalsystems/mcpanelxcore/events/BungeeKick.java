@@ -33,7 +33,7 @@ public class BungeeKick implements Listener {
         ev.setCancelled(true);
         ev.setCancelServer(kickTo);
         if (McPanelX_Core.cfg().getBoolean("BungeeKick.ShowKickMessage")) {
-            String msg = McPanelX_Core.cfg().getString("Messages.KickMessage");
+            String msg = McPanelX_Core.messages().getString("Messages.KickMessage");
             msg = ChatColor.translateAlternateColorCodes('&', msg);
             String kmsg = ChatColor.stripColor(BaseComponent.toLegacyText(ev.getKickReasonComponent()));
             msg = String.valueOf(msg) + kmsg;

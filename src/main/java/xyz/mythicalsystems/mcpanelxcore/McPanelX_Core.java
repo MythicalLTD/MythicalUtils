@@ -1,5 +1,7 @@
 package xyz.mythicalsystems.mcpanelxcore;
 
+import com.github.retrooper.packetevents.PacketEvents;
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -8,6 +10,7 @@ import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+
 import xyz.mythicalsystems.mcpanelxcore.commands.Alert;
 import xyz.mythicalsystems.mcpanelxcore.commands.Console;
 import xyz.mythicalsystems.mcpanelxcore.commands.McPanelXCommand;
@@ -17,6 +20,7 @@ import xyz.mythicalsystems.mcpanelxcore.events.BungeeJoin;
 import xyz.mythicalsystems.mcpanelxcore.events.BungeeKick;
 import xyz.mythicalsystems.mcpanelxcore.events.PlayerChatListener;
 import xyz.mythicalsystems.mcpanelxcore.events.PlayerTabCompleteListener;
+import xyz.mythicalsystems.mcpanelxcore.helpers.BrandHandler;
 import xyz.mythicalsystems.mcpanelxcore.helpers.UserHelper;
 
 import java.io.File;
@@ -29,47 +33,152 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Represents the main class of the McPanelX_Core plugin.
+ */
 public final class McPanelX_Core extends Plugin {
-    public static Plugin plugin;
+
+    /**
+     * The instance of the McPanelX_Core plugin.
+     */
     private static McPanelX_Core instance;
-    private SimplifiedConfig cfg;
+
+    /**
+     * The pattern used to match hexadecimal color codes.
+     */
     private static final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]{6})");
+
+    /**
+     * The title used for alerts.
+     */
     public static String title;
+
+    /**
+     * The message used for alerts.
+     */
     public static String message;
+
+    /**
+     * The message displayed when a command is blocked for regular players.
+     */
     public static List<String> blockedCommandMessage;
+
+    /**
+     * The message displayed when a command is blocked for admin players.
+     */
     public static List<String> blockedCommandMessageAdmin;
+
+    /**
+     * The list of blocked commands.
+     */
     public static List<String> blockedCommands;
 
+    /**
+     * Plugin module status
+     */
+    public static boolean inGameConsoleEnabled;
+    public static boolean commandBlockerEnabled;
+    public static boolean bungeeKickEnabled;
+    public static boolean alertSystemEnabled;
+    public static boolean loggerEnabled;
+    public static boolean playtimeEnabled;
+
+    /**
+     * Called when the plugin is enabled.
+     */
     @Override
     public void onEnable() {
         long startTime = System.currentTimeMillis();
         instance = this;
-        cfg = new SimplifiedConfig(this, "config.yml", true);
-
         PluginManager pm = getProxy().getPluginManager();
-        if (cfg().getBoolean("InGameConsole.enabled") == true) {
-            pm.registerCommand(plugin, new Console());
-        }
-        if (cfg().getBoolean("CommandBlocker.enabled") == true) {
-            pm.registerListener(plugin, new PlayerTabCompleteListener());
-            pm.registerListener(plugin, new PlayerChatListener());
-        }
-        if (cfg().getBoolean("BungeeKick.enabled") == true) {
-            pm.registerListener(plugin, new BungeeKick());
-        }
-
-        if (cfg().getBoolean("AlertSystem.enabled") == true) {
-            pm.registerCommand(plugin, new Alert());
-        }
-        pm.registerListener(plugin, new BungeeJoin());
-        pm.registerCommand(plugin, new McPanelXCommand());
-        pm.registerListener(plugin, new LoggerEvent());
         try {
             McPanelX_Core.makeConfigAlternative();
         } catch (IOException e) {
             getProxy().stop();
             getLogger().severe("Failed to create default config file: " + e);
         }
+
+        try {
+            McPanelX_Core.makeMessagesAlternative();
+        } catch (IOException e) {
+            getProxy().stop();
+            getLogger().severe("Failed to create default messages file: " + e);
+        }
+
+        if (cfg().getBoolean("InGameConsole.enabled")) {
+            getLogger().info("[McPanelX-Core] InGameConsole is enabled!");
+            pm.registerCommand(this, new Console());
+            inGameConsoleEnabled = true;
+        } else {
+            getLogger().info("[McPanelX-Core] InGameConsole is disabled!");
+            inGameConsoleEnabled = false;
+        }
+
+        if (cfg().getBoolean("CommandBlocker.enabled")) {
+            McPanelX_Core.blockedCommandMessage = messages().getStringList("CommandBlocker.blocked-message");
+            McPanelX_Core.blockedCommandMessageAdmin = messages().getStringList("CommandBlocker.blocked-message-admin");
+            McPanelX_Core.blockedCommands = cfg().getStringList("CommandBlocker.blocked-commands");
+            pm.registerListener(this, new PlayerTabCompleteListener());
+            pm.registerListener(this, new PlayerChatListener()); 
+            getLogger().info("[McPanelX-Core] CommandBlocker is enabled!");
+            commandBlockerEnabled = true;
+        } else {
+            getLogger().info("[McPanelX-Core] CommandBlocker is disabled!");
+            commandBlockerEnabled = false;
+        }
+
+        if (cfg().getBoolean("BungeeKick.enabled")) {
+            pm.registerListener(this, new BungeeKick());
+            getLogger().info("[McPanelX-Core] BungeeKick is enabled!");
+            bungeeKickEnabled = true;
+        } else {
+            getLogger().info("[McPanelX-Core] BungeeKick is disabled!");
+            bungeeKickEnabled = false;
+        }
+
+        if (cfg().getBoolean("AlertSystem.enabled")) {
+            pm.registerCommand(this, new Alert());
+            getLogger().info("[McPanelX-Core] AlertSystem is enabled!");
+            alertSystemEnabled = true;
+        } else {
+            getLogger().info("[McPanelX-Core] AlertSystem is disabled!");
+            alertSystemEnabled = false;
+        }
+
+        
+        if (cfg().getBoolean("Logger.enabled")) {
+            if (pm.getPlugin("packetevents") != null) {
+                pm.registerListener(this, new LoggerEvent());
+                getLogger().info("[McPanelX-Core] PacketEvents plugin is installed!");
+                if (cfg().getBoolean("Logger.logClientBranding")) {
+                    PacketEvents.getAPI().getEventManager().registerListener(new BrandHandler());
+                }
+                getLogger().info("[McPanelX-Core] Logger is enabled!");
+                loggerEnabled = true;
+
+            } else {
+                getLogger().warning("[McPanelX-Core] PacketEvents plugin is not installed!");
+                getLogger().warning("[McPanelX-Core] Logger is disabled!");
+                loggerEnabled = false;
+            }
+        } else {
+            getLogger().info("[McPanelX-Core] Logger is disabled!");
+            loggerEnabled = false;
+        }
+
+        if (cfg().getBoolean(("PlayTime.enabled"))) {
+            getLogger().info("[McPanelX-Core] Playtime is enabled!");
+            pm.registerListener(this, new BungeeJoin());
+            playtimeEnabled = true;
+        } else {
+            getLogger().info("[McPanelX-Core] Playtime is disabled!");
+            playtimeEnabled = false;
+        }
+
+        if (cfg().getBoolean("Panel.enable_panel_command")) {
+            pm.registerCommand(this, new McPanelXCommand());
+        }
+        
         final String pluginVersion = getDescription().getVersion();
         if (pluginVersion.contains("SNAPSHOT") || pluginVersion.contains("PRE")) {
             getLogger().warning(
@@ -88,15 +197,11 @@ public final class McPanelX_Core extends Plugin {
             getLogger().severe("Failed to start web server: " + e);
         }
         try {
-            McPanelX_Core.title = ChatColor.translateAlternateColorCodes('&', cfg().getString("Messages.AlertTitle"));
-            McPanelX_Core.message = ChatColor.translateAlternateColorCodes('&',
-                    cfg().getString("Messages.AlertMessage"));
+            McPanelX_Core.title = ChatColor.translateAlternateColorCodes('&', messages().getString("Alert.Title"));
+            McPanelX_Core.message = ChatColor.translateAlternateColorCodes('&', messages().getString("Alert.Message"));
         } catch (Exception e) {
             getLogger().severe("Failed to load alert message: " + e);
         }
-        McPanelX_Core.blockedCommandMessage = cfg().getStringList("CommandBlocker.blocked-command-message");
-        McPanelX_Core.blockedCommandMessageAdmin = cfg().getStringList("CommandBlocker.blocked-command-message-admin");
-        McPanelX_Core.blockedCommands = cfg().getStringList("CommandBlocker.blocked-commands");
 
         MySQL mySQL = new MySQL();
         if (mySQL.TryConnection()) {
@@ -113,10 +218,48 @@ public final class McPanelX_Core extends Plugin {
                 "      Startup Time: " + (System.currentTimeMillis() - startTime) + "&7 ms"));
         getLogger().info(
                 colorize("      WebServer enabled on port: " + cfg().getInt("Panel.port")));
+        if (inGameConsoleEnabled) {
+            getLogger().info(colorize("      InGameConsole enabled!"));
+        } else {
+            getLogger().info(colorize("      InGameConsole disabled!"));
+        }
+        if (commandBlockerEnabled) {
+            getLogger().info(colorize("      CommandBlocker enabled!"));
+        } else {
+            getLogger().info(colorize("      CommandBlocker disabled!"));
+        }
+        if (bungeeKickEnabled) {
+            getLogger().info(colorize("      BungeeKick enabled!"));
+        } else {
+            getLogger().info(colorize("      BungeeKick disabled!"));
+        }
+        if (alertSystemEnabled) {
+            getLogger().info(colorize("      AlertSystem enabled!"));
+        } else {
+            getLogger().info(colorize("      AlertSystem disabled!"));
+        }
+        if (loggerEnabled) {
+            getLogger().info(colorize("      Logger enabled!"));
+        } else {
+            getLogger().info(colorize("      Logger disabled!"));
+        }
+        if (playtimeEnabled) {
+            getLogger().info(colorize("      Playtime enabled!"));
+        } else {
+            getLogger().info(colorize("      Playtime disabled!"));
+        }
         getLogger().info("");
         getLogger().info("#========================================#");
+        if (cfg().getBoolean("Logger.enabled") == true && loggerEnabled == false) {
+            for (int i = 0; i < 25; i++) {
+                getLogger().severe("Logger is enabled but PacketEvents is not installed! (Logger will not work)");
+            }
+        } 
     }
 
+    /**
+     * Called when the plugin is disabled.
+     */
     @Override
     public void onDisable() {
         try {
@@ -131,15 +274,36 @@ public final class McPanelX_Core extends Plugin {
         getLogger().info("");
         getLogger().info("#========================================#");
     }
+    /**
+     * Reload the plugin
+     */
+    public static boolean Reload() {
+        return false; // This cant be done in BungeeCord due to MySQL and desync reason!
+    }
 
+    /**
+     * Gets the instance of the McPanelX_Core plugin.
+     *
+     * @return The instance of the plugin.
+     */
     public static McPanelX_Core getInstance() {
         return instance;
     }
 
+    /**
+     * Gets the version of the McPanelX_Core plugin.
+     *
+     * @return The version of the plugin.
+     */
     public static String getVersion() {
         return instance.getDescription().getVersion();
     }
 
+    /**
+     * Gets the configuration of the plugin.
+     *
+     * @return The configuration.
+     */
     public static Configuration cfg() {
         try {
             Configuration configuration = ConfigurationProvider.getProvider(YamlConfiguration.class)
@@ -151,10 +315,36 @@ public final class McPanelX_Core extends Plugin {
         }
     }
 
-    public static String getPrefix() {
-        return cfg().getString("Messages.Prefix");
+    /**
+     * Gets the messages configuration of the plugin.
+     *
+     * @return The messages configuration.
+     */
+    public static Configuration messages() {
+        try {
+            Configuration configuration = ConfigurationProvider.getProvider(YamlConfiguration.class)
+                    .load(new File(getInstance().getDataFolder(), "messages.yml"));
+            return configuration;
+        } catch (IOException e) {
+            getInstance().getLogger().info("[McPanelX] Failed to get messages: " + e);
+            return null;
+        }
     }
 
+    /**
+     * Gets the prefix used for messages.
+     *
+     * @return The message prefix.
+     */
+    public static String getPrefix() {
+        return colorize(messages().getString("Global.Prefix"));
+    }
+
+    /**
+     * Creates an alternative configuration file if it doesn't exist.
+     *
+     * @throws IOException If an I/O error occurs.
+     */
     public static void makeConfigAlternative() throws IOException {
         if (!getInstance().getDataFolder().exists()) {
             getInstance().getDataFolder().mkdir();
@@ -167,18 +357,51 @@ public final class McPanelX_Core extends Plugin {
                 Files.copy(in, file.toPath());
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                getInstance().getLogger().info("Created config.yml");
             }
         }
     }
 
-    public SimplifiedConfig getConfig() {
-        return cfg;
+    /**
+     * Creates an alternative messages configuration file if it doesn't exist.
+     *
+     * @throws IOException If an I/O error occurs.
+     */
+    public static void makeMessagesAlternative() throws IOException {
+        if (!getInstance().getDataFolder().exists()) {
+            getInstance().getDataFolder().mkdir();
+        }
+
+        File file = new File(getInstance().getDataFolder(), "messages.yml");
+
+        if (!file.exists()) {
+            try (InputStream in = getInstance().getResourceAsStream("messages.yml")) {
+                Files.copy(in, file.toPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                getInstance().getLogger().info("Created messages.yml");
+            }
+        }
     }
 
+    /**
+     * Colorizes a message by replacing color codes with the corresponding color.
+     *
+     * @param message The message to colorize.
+     * @return The colorized message.
+     */
     public static String colorize(final String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
+    /**
+     * Translates hexadecimal color codes in a message to the corresponding color.
+     *
+     * @param message The message to translate.
+     * @return The translated message.
+     */
     public static String translateHexColorCodes(final String message) {
         final char colorChar = ChatColor.COLOR_CHAR;
 
@@ -197,6 +420,14 @@ public final class McPanelX_Core extends Plugin {
         return matcher.appendTail(buffer).toString();
     }
 
+    /**
+     * Checks if a list of strings contains a case-insensitive match for a search
+     * string.
+     *
+     * @param list         The list of strings to search.
+     * @param searchString The search string.
+     * @return true if a match is found, false otherwise.
+     */
     public static boolean equalsIgnoreCase(List<String> list, String searchString) {
         if (list == null || searchString == null)
             return false;
@@ -211,6 +442,12 @@ public final class McPanelX_Core extends Plugin {
         return false;
     }
 
+    /**
+     * Transforms a string into a BaseComponent array with color codes applied.
+     *
+     * @param string The string to transform.
+     * @return The transformed BaseComponent array.
+     */
     public static BaseComponent[] transformString(String string) {
         if (string == null)
             throw new NullPointerException("string cannot be null");
@@ -218,14 +455,29 @@ public final class McPanelX_Core extends Plugin {
                 .fromLegacyText(ChatColor.translateAlternateColorCodes('&', McPanelX_Core.getPrefix() + string));
     }
 
+    /**
+     * Gets the list of blocked command messages.
+     *
+     * @return The list of blocked command messages.
+     */
     public static List<String> getBlockedCommandMessage() {
         return Collections.unmodifiableList(McPanelX_Core.blockedCommandMessage);
     }
 
+    /**
+     * Gets the list of blocked admin command messages.
+     *
+     * @return The list of blocked admin command messages.
+     */
     public static List<String> getBlockedCommandMessageAdmin() {
         return Collections.unmodifiableList(McPanelX_Core.blockedCommandMessageAdmin);
     }
 
+    /**
+     * Gets the list of blocked commands.
+     *
+     * @return The list of blocked commands.
+     */
     public static List<String> getBlockedCommands() {
         return Collections.unmodifiableList(McPanelX_Core.blockedCommands);
     }

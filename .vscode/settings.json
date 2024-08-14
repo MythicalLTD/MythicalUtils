@@ -1,7 +1,13 @@
 {
     "java.compile.nullAnalysis.mode": "automatic",
     "cSpell.words": [
+        "Gson",
+        "IHTTP",
         "jdbc",
+        "mcpanelxcore",
+        "mythicalsystems",
+        "packetevents",
         "Proxied"
-    ]
+    ],
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

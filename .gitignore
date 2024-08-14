@@ -47,3 +47,4 @@ buildNumber.properties
 /development/plugins/McPanelX-Core
 /development/crash-reports
 /development/plugins/McPanelX-Core-*.jar
+/development/plugins/LuckPerms/*

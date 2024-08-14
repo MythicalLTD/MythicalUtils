@@ -51,4 +51,4 @@ connection_throttle_limit: 3
 groups:
   NaysKutzu:
   - admin
-log_pings: true
+log_pings: false

@@ -198,4 +198,86 @@ public class UserHelper extends MySQL {
         }
         return null;
     }
+    /**
+     * Save the user brand name
+     * 
+     * @param uuid UUID
+     * @param brandName Brand name
+     * @throws SQLException
+     */
+    public static void saveBrandName(UUID uuid, String brandName) throws SQLException {
+        MySQL db = new MySQL();
+        Connection conn = db.getConnection();
+        String query = "UPDATE `" + MySQL.users_table + "` SET `brand_name` = ? WHERE `" + MySQL.users_table + "`.`uuid` = ?";
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setString(1, brandName);
+            statement.setString(2, uuid.toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
+        }
+
+        String query2 = "INSERT INTO `" + MySQL.brands_table + "` (uuid, value) VALUES (?, ?)";
+        try (PreparedStatement statement = conn.prepareStatement(query2)) {
+            statement.setString(1, uuid.toString());
+            statement.setString(2, brandName);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Get the user brand name
+     * 
+     * @param uuid UUID
+     * 
+     * @return Brand name
+     */
+    public static String getUserBrandName(UUID uuid) throws SQLException {
+        MySQL db = new MySQL();
+        Connection conn = db.getConnection();
+        String query = "SELECT `brand_name` FROM `" + MySQL.users_table + "` WHERE `uuid` = ?";
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setString(1, uuid.toString());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getString("brand_name");
+                }
+            }
+        } catch (SQLException e) {
+            throw e;
+        }
+        return null;
+    }
+
+    /**
+     * Save user version name
+     * 
+     * @param uuid UUID
+     * @param versionName Version name
+     * 
+     * @throws SQLException
+     */
+    public static void saveVersionName(UUID uuid, String versionName) throws SQLException {
+        MySQL db = new MySQL();
+        Connection conn = db.getConnection();
+        String query = "UPDATE `" + MySQL.users_table + "` SET `version_name` = ? WHERE `" + MySQL.users_table + "`.`uuid` = ?";
+        try (PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setString(1, versionName);
+            statement.setString(2, uuid.toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
+        }
+
+        String query2 = "INSERT INTO `" + MySQL.versions_table + "` (uuid, value) VALUES (?, ?)";
+        try (PreparedStatement statement = conn.prepareStatement(query2)) {
+            statement.setString(1, uuid.toString());
+            statement.setString(2, versionName);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
 }

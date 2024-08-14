@@ -10,8 +10,10 @@ import net.md_5.bungee.api.event.ServerDisconnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import xyz.mythicalsystems.mcpanelxcore.McPanelX_Core;
+import xyz.mythicalsystems.mcpanelxcore.helpers.ProtocolVersionTranslator;
 import xyz.mythicalsystems.mcpanelxcore.helpers.UserHelper;
 
+@SuppressWarnings("unused")
 public class BungeeJoin implements Listener {
 
     @SuppressWarnings("deprecation")
@@ -23,23 +25,32 @@ public class BungeeJoin implements Listener {
             if (UserHelper.isUserValid(uuid) == true) {
                 UserHelper.markUserAsOnline(uuid);
                 UserHelper.updateUserLastSeen(player);
+                UserHelper.saveVersionName(uuid, ProtocolVersionTranslator
+                        .translateProtocolToString(player.getPendingConnection().getVersion()));
             } else {
                 try {
                     UserHelper.CreateUser(player.getName(), uuid,
                             player.getAddress().getAddress().getHostAddress());
-                    player.disconnect(new TextComponent(
-                            "Your account was created successfully. Please rejoin the server in order to play!"));
+                    if (McPanelX_Core.cfg().getBoolean("Panel.kick_new_players") == true) {
+                        player.disconnect(new TextComponent(
+                                McPanelX_Core.colorize(McPanelX_Core.messages().getString("Panel.AccountCreated"))));
+                        return;
+                    } else {
+                        UserHelper.markUserAsOnline(uuid);
+                        UserHelper.updateUserLastSeen(player);
+                        UserHelper.saveVersionName(uuid, ProtocolVersionTranslator.translateProtocolToString(player.getPendingConnection().getVersion()));
+                    }
                 } catch (SQLException e) {
                     player.disconnect(new TextComponent(
-                            "An error occurred while trying to validate your account. Please try again later."));
+                            McPanelX_Core.colorize(McPanelX_Core.messages().getString("Panel.AccountCreatedError"))));
                     McPanelX_Core.getInstance().getLogger()
                             .severe("An error occurred while trying to validate a user account." + e);
+                    return;
                 }
-                player.disconnect(new TextComponent("Your account is not valid. Please contact an administrator."));
             }
         } catch (SQLException e) {
             player.disconnect(new TextComponent(
-                    "An error occurred while trying to validate your account. Please try again later."));
+                    McPanelX_Core.colorize(McPanelX_Core.messages().getString("Panel.AccountValidationFailed"))));
         }
     }
 
@@ -48,9 +59,11 @@ public class BungeeJoin implements Listener {
         ProxiedPlayer player = sve.getPlayer();
         UUID uuid = player.getUniqueId();
         try {
+            UserHelper.updateUserLastSeen(player);
             UserHelper.markUserAsOffline(uuid);
         } catch (SQLException e) {
-            McPanelX_Core.getInstance().getLogger().severe("An error occurred while trying to update a user account." + e);
+            McPanelX_Core.getInstance().getLogger()
+                    .severe("An error occurred while trying to update a user account." + e);
         }
     }
 }

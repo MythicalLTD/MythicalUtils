@@ -1,16 +1,16 @@
 Panel:
-  # The name of the server
-  server_name: BungeeCord
-  # The name of the console
-  console_name: GlobalSystem
-  # The prot for the api server
+  # The port for the api endpoint (RemoteConsoleConnection)
   port: 5888
   # The api key for the plugin
   api_key: test
-  # The panel url
-  panel_url: http://panel.mcpanelx.com
+  # The panel url (No traling slash)
+  panel_url: http://panel.mythicalsystems.xyz
   # Should we any connection to the plugin to the console to the console?
   log_to_console: false
+  # Should we enable the /panel command?
+  enable_panel_command: true
+  # Should we kick new registered players?
+  kick_new_players: false
 
 Database:
   host: localhost
@@ -19,32 +19,40 @@ Database:
   username: root
   password: ''
 
-ConsolePlayers:
-  - NaysKutzu
-LockedConsoleCommands:
-  - plugman
-  - stop
-  - restart
-Messages:
-  # Prefix
-  Prefix: "YourServer &7> "
-  NoPermission: "You do not have any permissions to run this command!"
-  OnlyForPlayers: "This command is only for ingame players!"
-  # Console
-  ConsoleSyntax: "Use: /console [Command]"
-  LockedCommand: "This command is blocked!"
-  Complete: "The command has been executed in the server console!!"
-  # Alert
-  AlertTitle: "Alert"
-  AlertMessage: "Alert > "
-  # AntiUserSteal
-  AntiUserSteal: "Why you trying to steal an user account?"
-  # BungeeKick
-  KickMessage: 'You were kicked from the server: '
+# Logger is a system that can help McPanelX get some info about the player!
+Logger:
+  enabled: true
+  # Log chat messages?
+  chat: true
+  # Log commands?
+  commands: true
+  # Should we log the player's client name?
+  logClientBranding: true
+  # Should we log the player's client version?
+  logClientVersion: true
+
+  # The list of things that should be ignored!
+  ignore:
+    - ignoreme
+    - /ignoreme
+
+# PlayTime is a system used to log how much a player has played on the server!
+PlayTime:
+  enabled: true
+  # Should we log if the user is online or not?
+  isOnline: true 
+  # Should we log how much the user has played or not?
+  playTime: true
 
 # Should we let users form the ConsolePlayers use their console?
 InGameConsole:
   enabled: true
+  Players:
+    - NaysKutzu
+  LockedCommands:
+    - plugman
+    - stop
+    - restart
 
 # Should we hook into the alert system and replace it with our own?
 AlertSystem:
@@ -59,12 +67,6 @@ BungeeKick:
 # Should we block some commands from being executed in the console?
 CommandBlocker:
   enabled: true
-  blocked-command-message:
-  - "&cThis command is blocked!"
-
-  blocked-command-message-admin:
-  - "&8[&cMcPanelX&8] &7The player &c{player} &7tried to execute a blocked command."
-
   blocked-commands:
   - "/antibot"
   - "/vpn"
