@@ -1,7 +1,0 @@
-name: McPanelX-Core
-version: '${project.version}'
-main: xyz.mythicalsystems.mcpanelxcore.McPanelX_Core
-author: NaysKutzu
-description: 'A simple plugin to manage your server from a web panel!'
-website: 'https://mythicalsystems.xyz'
-depend: [packetevents]
