@@ -1,13 +1,12 @@
 {
-    "java.compile.nullAnalysis.mode": "automatic",
     "cSpell.words": [
-        "Gson",
-        "IHTTP",
-        "jdbc",
-        "mcpanelxcore",
+        "Hikari",
+        "mythicalmclogin",
         "mythicalsystems",
-        "packetevents",
+        "plmessages",
         "Proxied"
     ],
+    "svn.ignoreMissingSvnWarning": true,
+    "java.compile.nullAnalysis.mode": "automatic",
     "java.configuration.updateBuildConfiguration": "automatic"
 }

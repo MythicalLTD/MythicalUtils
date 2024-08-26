@@ -1,8 +1,8 @@
 server_connect_timeout: 5000
 enforce_secure_profile: false
-remote_ping_cache: -1
 forge_support: false
 player_limit: -1
+log_pings: false
 permissions:
   default:
   - bungeecord.command.server
@@ -16,12 +16,13 @@ permissions:
   - mcpanelx.alert
 timeout: 30000
 log_commands: false
-network_compression_threshold: 256
 online_mode: false
+disabled_commands:
+- disabledcommandhere
 servers:
   lobby:
     motd: '&1Just another BungeeCord - Forced Host'
-    address: localhost:25566
+    address: 212.87.213.120:25565
     restricted: false
 listeners:
 - query_port: 25565
@@ -39,16 +40,15 @@ listeners:
   max_players: 1
   tab_size: 60
   force_default_server: true
-prevent_proxy_connections: false
-ip_forward: true
 remote_ping_timeout: 5000
+ip_forward: true
+network_compression_threshold: 256
 reject_transfers: false
-disabled_commands:
-- disabledcommandhere
+remote_ping_cache: -1
 connection_throttle: 4000
 stats: e79daf00-7f00-4c33-a4d2-f1a9ebb19b1c
 connection_throttle_limit: 3
 groups:
   NaysKutzu:
   - admin
-log_pings: false
+prevent_proxy_connections: false
