@@ -4,7 +4,7 @@ import xyz.mythicalsystems.McPanelX.src.Config.Config;
 import xyz.mythicalsystems.McPanelX.src.Logger.Logger;
 import xyz.mythicalsystems.McPanelX.src.Messages.Messages;
 import xyz.mythicalsystems.McPanelX.src.Metrics.Metrics;
-import xyz.mythicalsystems.McPanelX.src.Translators.ChatTranslator;
+import xyz.mythicalsystems.McPanelX.src.MySQL.MySQLConnector;
 import xyz.mythicalsystems.McPanelX.src.Translators.VersionTranslator;
 
 public class McPanelX {
@@ -22,6 +22,11 @@ public class McPanelX {
      */
     public static Logger logger;
     /**
+     * The MySQL connector for the plugin
+     */
+    public static MySQLConnector mysql;
+
+    /**
      * Start the plugin
      */
     public static void up() {
@@ -38,15 +43,17 @@ public class McPanelX {
         new Metrics(MinecraftPlugin.getInstance(),23007);
         // Show plugin info
         VersionTranslator.TranslatePluginStartup();
-
-        logger.info("McPanelX",ChatTranslator.Translate("{prefix} {textcolor}welcome to {maincolor}here lol so {secondarycolor}hahaha"));
-    }
+        // Initialize the database connection!
+        mysql = new MySQLConnector(Config.getSetting().getString("Database.Host"),Config.getSetting().getString("Database.Port"),Config.getSetting().getString("Database.Database"),Config.getSetting().getString("Database.Username"),Config.getSetting().getString("Database.Password"));
+        mysql.tryConnection();
+        
+    }   
 
     /**
      * Stop the plugin
      */
     public static void down() {
-
+        mysql.close();
     }
 
     /**

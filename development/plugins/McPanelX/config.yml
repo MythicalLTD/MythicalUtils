@@ -6,3 +6,14 @@ Global:
   SecondaryColor: "&5"
   TextColor: "&7"
 
+Database:
+  # The host of the database
+  Host: "192.168.0.69"
+  # The port of the database
+  Port: 3306
+  # The name of the database
+  Database: "mcpanelx"
+  # The username of the database
+  Username: "nayskutzu"
+  # The password of the database
+  Password: ""

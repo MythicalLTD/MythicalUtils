@@ -1,0 +1,4 @@
+[23:25:23 27.08.2024] INFO (McPanelX): Starting McPanelX
+[23:25:23 27.08.2024] INFO (Config): Config file created
+[23:25:23 27.08.2024] INFO (Messages): Config file created
+[23:25:23 27.08.2024] WARN (Main): You are running a pre-release build of McPanelX-Core. This version is not stable and may contain bugs.

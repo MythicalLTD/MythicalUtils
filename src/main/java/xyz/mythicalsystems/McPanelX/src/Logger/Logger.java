@@ -4,10 +4,10 @@ import xyz.mythicalsystems.McPanelX.McPanelX;
 import xyz.mythicalsystems.McPanelX.MinecraftPlugin;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import com.google.common.io.Files;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -100,11 +100,19 @@ public class Logger {
      * @param message
      */
     private void writeLog(String message) {
-        File logFile = new File(McPanelX.plugin_path + "/log.txt");
         message = ChatColor.stripColor(message);
-        
+
         try {
-            Files.asCharSink(logFile, java.nio.charset.StandardCharsets.UTF_8).write(message);
+            File logsDir = new File(McPanelX.plugin_path, "logs");
+            if (!logsDir.exists()) {
+                logsDir.mkdir();
+            }
+
+            try (FileWriter writer = new FileWriter(logsDir + "/log.txt", true)) {
+                writer.write(message + "\n");
+            } catch (IOException e) {
+                MinecraftPlugin.getInstance().getLogger().severe("(Logger) Failed to write log file: " + e.getMessage());
+            }
         } catch (Exception e) {
             MinecraftPlugin.getInstance().getLogger().severe("Failed to write to log file");
         }
