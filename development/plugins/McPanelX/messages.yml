@@ -1,0 +1,15 @@
+# This file is used to store messages that are used in the plugin.
+# You can use the prefix and colors from the config.yml file.
+# You can also use the '&' symbol to color the text.
+# 
+# You can also use the following placeholders:
+
+# {prefix} - The prefix of the plugin
+# {maincolor} - The main color of the plugin
+# {secondarycolor} - The secondary color of the plugin
+# {textcolor} - The text color of the plugin
+
+Plugin:
+  Enabled: '&aPlugin enabled!'
+  Disabled: '&cPlugin disabled!'
+  Reloaded: '&ePlugin reloaded!'

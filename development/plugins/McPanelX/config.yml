@@ -1,0 +1,8 @@
+Global:
+  # The prefix of all messages
+  Prefix: "&7[&5&lMcPanel&d&lX&l&7] &7> "
+  # Colors for messages ;)
+  MainColor: "&d"
+  SecondaryColor: "&5"
+  TextColor: "&7"
+
