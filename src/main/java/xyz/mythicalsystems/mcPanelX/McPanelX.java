@@ -1,16 +1,17 @@
-package xyz.mythicalsystems.mcPanelX;
+package xyz.mythicalsystems.McPanelX;
 
-import net.md_5.bungee.api.plugin.Plugin;
+public class McPanelX {
+    
+    public static void up() {
 
-public final class McPanelX extends Plugin {
-
-    @Override
-    public void onEnable() {
-        // Plugin startup logic
     }
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
+    public static void down() {
+
+    }
+
+    public static void reload() {
+        down();
+        up();
     }
 }

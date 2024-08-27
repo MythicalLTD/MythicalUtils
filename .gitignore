@@ -48,3 +48,4 @@ buildNumber.properties
 /development/crash-reports
 /development/plugins/McPanelX-Core-*.jar
 /development/plugins/LuckPerms/*
+development/tools/*
