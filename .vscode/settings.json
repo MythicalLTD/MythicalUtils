@@ -1,10 +1,13 @@
 {
     "cSpell.words": [
         "Hikari",
+        "Inno",
         "mythicalmclogin",
         "mythicalsystems",
+        "playtimeplayer",
         "plmessages",
-        "Proxied"
+        "Proxied",
+        "servername"
     ],
     "svn.ignoreMissingSvnWarning": true,
     "java.compile.nullAnalysis.mode": "automatic",

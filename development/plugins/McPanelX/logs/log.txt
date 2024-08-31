@@ -1,4 +1,18 @@
-[23:25:23 27.08.2024] INFO (McPanelX): Starting McPanelX
-[23:25:23 27.08.2024] INFO (Config): Config file created
-[23:25:23 27.08.2024] INFO (Messages): Config file created
-[23:25:23 27.08.2024] WARN (Main): You are running a pre-release build of McPanelX-Core. This version is not stable and may contain bugs.
+[01:48:24 01.09.2024] INFO (McPanelX): Starting McPanelX
+[01:48:24 01.09.2024] INFO (Config): Config file created
+[01:48:24 01.09.2024] INFO (Messages): Config file created
+[01:48:24 01.09.2024] WARN (Main): You are running a pre-release build of McPanelX-Core. This version is not stable and may contain bugs.
+[01:48:25 01.09.2024] INFO (MySQLConnector): Connected to MySQL server
+[01:48:25 01.09.2024] INFO (MySQLConnector): Running McPanelX database version: 1.0.0
+[01:48:25 01.09.2024] INFO (MySQLConnector): Database is up to date
+[01:48:25 01.09.2024] INFO (McPanelX): McPanelX is ready to go!
+[01:48:25 01.09.2024] INFO (McPanelX): Startup took 387ms
+[01:48:58 01.09.2024] INFO (McPanelX): McPanelX is stopping NOW!
+[01:48:58 01.09.2024] INFO (McPanelX): Goodbye!
+[01:48:58 01.09.2024] INFO (McPanelX): Starting McPanelX
+[01:48:58 01.09.2024] WARN (Main): You are running a pre-release build of McPanelX-Core. This version is not stable and may contain bugs.
+[01:48:58 01.09.2024] INFO (MySQLConnector): Connected to MySQL server
+[01:48:58 01.09.2024] INFO (MySQLConnector): Running McPanelX database version: 1.0.0
+[01:48:58 01.09.2024] INFO (MySQLConnector): Database is up to date
+[01:48:58 01.09.2024] INFO (McPanelX): McPanelX is ready to go!
+[01:48:58 01.09.2024] INFO (McPanelX): Startup took 88ms

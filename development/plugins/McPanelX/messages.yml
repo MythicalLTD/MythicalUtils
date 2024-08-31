@@ -9,7 +9,27 @@
 # {secondarycolor} - The secondary color of the plugin
 # {textcolor} - The text color of the plugin
 
-Plugin:
-  Enabled: '&aPlugin enabled!'
-  Disabled: '&cPlugin disabled!'
-  Reloaded: '&ePlugin reloaded!'
+# You can also use the following placeholders:
+
+# {panel_url} - The url of the panel
+
+Global:
+  InvalidCommand: "{prefix}{textcolor}Invalid command! Use {secondarycolor}/mcpanelx help{textcolor} to see the available commands!"
+  NoPermission: "{prefix}{textcolor}You don't have permission to use this {maincolor}{textcolor}command!"
+  Reloaded: "{prefix}{textcolor}The {maincolor}McPanelX{textcolor} configuration has been reloaded!"
+  ErrorOnJoin: "{prefix}{textcolor}An error occurred while trying to join the server! Please try again later!"
+  ReloadKickReason: "{prefix}{textcolor}The server is reloading! Please join again in a few seconds!"
+
+Help: 
+  help: "{textcolor}Show this help message!"
+  reload: "{textcolor}Reload the {maincolor}McPanelX{textcolor} configuration!"
+  login: "{textcolor}Get a login token for the {maincolor}McPanelX{textcolor} web!"
+  tokenReset: "{textcolor}Reset your current {maincolor}token{textcolor}!"
+  tokenShow: "{textcolor}Show your current {maincolor}token{textcolor}!"
+
+Token:
+  TokenReset: "{prefix}{textcolor}Your {maincolor}token{textcolor} has been reset!"
+  TokenShow: "{prefix}{textcolor}Your current {maincolor}token{textcolor} is: {secondarycolor}{token}{textcolor}!"
+
+Login:
+  Message: "{prefix}{textcolor}If you want to login inside the panel please go to {maincolor}{panel_url}/auth/login?token={token}{textcolor}!"

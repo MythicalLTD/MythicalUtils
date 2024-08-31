@@ -24,14 +24,6 @@ public class Logger {
             directory.mkdirs();
         }
 
-        File logFile = new File(pluginPath + "/log.txt");
-        if (!logFile.exists()) {
-            try {
-                logFile.createNewFile();
-            } catch (Exception e) {
-                MinecraftPlugin.getInstance().getLogger().severe("Failed to create log file");
-            }
-        }
     }
 
     /**

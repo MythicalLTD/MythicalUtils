@@ -6,14 +6,33 @@ Global:
   SecondaryColor: "&5"
   TextColor: "&7"
 
+Panel:
+  # The URL of the panel
+  url: "https://mcpanelx.xyz"
+
 Database:
   # The host of the database
-  Host: "192.168.0.69"
+  Host: "127.0.0.1"
   # The port of the database
   Port: 3306
   # The name of the database
   Database: "mcpanelx"
   # The username of the database
-  Username: "nayskutzu"
+  Username: "root"
   # The password of the database
   Password: ""
+
+  # Do not change this or you will brick your database!
+  Version: "1.0.0"
+
+# Logger is a system that can help McPanelX get some info about the player!
+Logger:
+  # Log chat messages?
+  chat: true
+  # Log commands?
+  commands: true
+
+  # The list of things that should be ignored!
+  ignore:
+    - ignoreme
+    - /ignoreme

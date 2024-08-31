@@ -21,7 +21,7 @@ public final class MinecraftPlugin extends Plugin {
     @Override
     public void onEnable() {
         instance = this;
-
+        pluginManager = getProxy().getPluginManager();
         if (pluginManager.getPlugin("packetevents") == null) {
             getLogger().severe("PacketEvents is not installed! Please install it to use McPanelX-Core");
             getProxy().stop();
@@ -32,7 +32,6 @@ public final class MinecraftPlugin extends Plugin {
         version = getDescription().getVersion();
         author = getDescription().getAuthor();
         name = getDescription().getName();
-        pluginManager = getProxy().getPluginManager();
         McPanelX.up();
     }
 

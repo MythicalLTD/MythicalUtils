@@ -15,7 +15,7 @@ if platform.system() == "Windows":
     print("Current path:", current_path)
 
     print("Building the plugin...")
-    os.system(f"{os.environ['maven_home']}mvn package -Dmaven.multiModuleProjectDirectory={current_path} -Djansi.passthrough=true -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -file pom.xml")
+    os.system(f"{os.environ['maven_home']}mvn package -Dmaven.multiModuleProjectDirectory={current_path} -Djansi.passthrough=true -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Ddetail=false -Dsun.stderr.encoding=UTF-8 -file pom.xml")
     print("Plugin built!")
 
     print("Deleting the old plugin")

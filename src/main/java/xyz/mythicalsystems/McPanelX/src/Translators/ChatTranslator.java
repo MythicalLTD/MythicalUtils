@@ -23,6 +23,7 @@ public class ChatTranslator {
         message = message.replace("{maincolor}", Config.getSetting().getString("Global.MainColor"));
         message = message.replace("{secondarycolor}", Config.getSetting().getString("Global.SecondaryColor"));
         message = message.replace("{textcolor}", Config.getSetting().getString("Global.TextColor"));
+        message = message.replace("{panel_url}", Config.getSetting().getString("Panel.url"));
         message = ChatColor.translateAlternateColorCodes('&', message);
         message = ChatColor.translateAlternateColorCodes('§', message);
         return message;
