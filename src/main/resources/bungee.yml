@@ -3,3 +3,4 @@ version: '1.0-SNAPSHOT'
 main: xyz.mythicalsystems.McPanelX.MinecraftPlugin
 author: NaysKutzu
 description: McPanelX is the minecraft plugin for McPanelX, and it's meant to help connect the server with the panel!
+softDepends: ["RedisBungee"]

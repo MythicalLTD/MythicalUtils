@@ -22,9 +22,6 @@ Database:
   # The password of the database
   Password: ""
 
-  # Do not change this or you will brick your database!
-  Version: "1.0.0"
-
 # Logger is a system that can help McPanelX get some info about the player!
 Logger:
   # Log chat messages?
@@ -36,3 +33,21 @@ Logger:
   ignore:
     - ignoreme
     - /ignoreme
+
+Discord:
+  # Should we enable Discord?
+  enabled: true
+  # PinLogin
+  pinlogin: true
+  # Discord Bot Token
+  token: "MTI3Mzc3ODk0NTc2NTkzMzEzOQ.GEWxiW.lqETNYf4dO_HSPxLQYihDNgFhdb6iMTGEml0Bg"
+  # Discord Guild ID 
+  guild: 1276929020835008603
+  # Discord Application ID
+  application_id: 1273778945765933139
+  # Discord Application Secret
+  application_secret: "VahNiw6wo-AElmyDSqhXe4j_Cr1QsrQz"
+  # Discord Public Key
+  public_key: "eb3c95769af12d79b804465a0e6bd690c07a80228c84715b1794aa9b2ad90420"
+  # Discord Invite
+  invite: "https://discord.gg/mythicalsystems"

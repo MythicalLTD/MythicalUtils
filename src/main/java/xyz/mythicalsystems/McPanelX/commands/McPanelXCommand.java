@@ -13,7 +13,9 @@ import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import xyz.mythicalsystems.McPanelX.McPanelX;
 import xyz.mythicalsystems.McPanelX.MinecraftPlugin;
+import xyz.mythicalsystems.McPanelX.src.Config.Config;
 import xyz.mythicalsystems.McPanelX.src.Link.Account;
+import xyz.mythicalsystems.McPanelX.src.Link.Discord;
 import xyz.mythicalsystems.McPanelX.src.Messages.Messages;
 import xyz.mythicalsystems.McPanelX.src.Translators.ChatTranslator;
 
@@ -81,6 +83,61 @@ public class McPanelXCommand extends Command implements TabExecutor {
                                             .Translate(Messages.getMessage().getString("Global.InvalidCommand"))));
                             return;
                     }
+                    case "discord":
+                    if (args.length == 1) {
+                        player.sendMessage(new TextComponent(
+                                ChatTranslator.Translate(Messages.getMessage().getString("Global.InvalidCommand"))));
+                        return;
+                    }
+                String discordSubCommand = args[1];
+                switch (discordSubCommand) {
+                    case "link":
+                        if (player.hasPermission("mcpanelx.discord.link")) {
+                            if (Discord.isAccountLinked(player.getUniqueId())) {
+                                player.sendMessage(new TextComponent(
+                                        ChatTranslator.Translate(Messages.getMessage().getString("Discord.AlreadyLinked"))));
+                                return;
+                            }
+
+                            String token = Discord.generatePin();
+                            Discord.registerPin(player.getUniqueId(), token);
+                            player.sendMessage(new TextComponent(
+                                    ChatTranslator.Translate(Messages.getMessage().getString("Discord.Link").replace("{token}", token))));
+                        } else {
+                            player.sendMessage(new TextComponent(
+                                    ChatTranslator.Translate(Messages.getMessage().getString("Global.NoPermission"))));
+                        }
+                        return;
+                    case "unlink":
+                        if (player.hasPermission("mcpanelx.discord.unlink")) {
+                            if (!Discord.isAccountLinked(player.getUniqueId())) {
+                                player.sendMessage(new TextComponent(
+                                        ChatTranslator.Translate(Messages.getMessage().getString("Discord.NotLinked"))));
+                                return;
+                            }
+                            Discord.unLinkDiscord(player.getUniqueId());
+                            player.sendMessage(new TextComponent(
+                                    ChatTranslator.Translate(Messages.getMessage().getString("Discord.Unlink"))));
+                        } else {
+                            player.sendMessage(new TextComponent(
+                                    ChatTranslator.Translate(Messages.getMessage().getString("Global.NoPermission"))));
+                        }
+                        return;
+                    case "invite":
+                        if (player.hasPermission("mcpanelx.discord.invite")) {
+                            player.sendMessage(new TextComponent(
+                                    ChatTranslator.Translate(Messages.getMessage().getString("Discord.Invite"))));
+                        } else {
+                            player.sendMessage(new TextComponent(
+                                    ChatTranslator.Translate(Messages.getMessage().getString("Global.NoPermission"))));
+                        }
+                        return;
+                    default:
+                        player.sendMessage(new TextComponent(
+                                ChatTranslator
+                                        .Translate(Messages.getMessage().getString("Global.InvalidCommand"))));
+                        return;
+                } 
                 case "reload":
                     if (player.hasPermission("mcpanelx.reload")) {
                         McPanelX.reload();
@@ -153,6 +210,26 @@ public class McPanelXCommand extends Command implements TabExecutor {
                         new TextComponent(ChatTranslator.Translate("{secondarycolor}/mcpanelx token show {textcolor}- "
                                 + Messages.getMessage().getString("Help.tokenShow"))));
             }
+            if (Config.getSetting().getBoolean("Discord.enabled")) {
+                if (player.hasPermission("mcpanelx.discord.link")) {
+                    sender.sendMessage(
+                            new TextComponent(
+                                    ChatTranslator.Translate("{secondarycolor}/mcpanelx discord link {textcolor}- "
+                                            + Messages.getMessage().getString("Help.discordLink"))));
+                }
+                if (player.hasPermission("mcpanelx.discord.unlink")) {
+                    sender.sendMessage(
+                            new TextComponent(
+                                    ChatTranslator.Translate("{secondarycolor}/mcpanelx discord unlink {textcolor}- "
+                                            + Messages.getMessage().getString("Help.discordUnlink"))));
+                }
+                if (player.hasPermission("mcpanelx.discord.invite")) {
+                    sender.sendMessage(
+                            new TextComponent(
+                                    ChatTranslator.Translate("{secondarycolor}/mcpanelx discord invite {textcolor}- "
+                                            + Messages.getMessage().getString("Help.discordInvite"))));
+                }
+            }
             if (player.hasPermission("mcpanelx.reload")) {
                 sender.sendMessage(
                         new TextComponent(ChatTranslator.Translate("{secondarycolor}/mcpanelx reload {textcolor}- "
@@ -210,6 +287,15 @@ public class McPanelXCommand extends Command implements TabExecutor {
                 }
             }
 
+            if (Config.getSetting().getBoolean("Discord.enabled")) {
+                if (sender.hasPermission("mcpanelx.discord") || sender.hasPermission("mcpanelx.discord.link")
+                        || sender.hasPermission("mcpanelx.discord.unlink") || sender.hasPermission("mcpanelx.discord.invite")) {
+                    if ("discord".startsWith(partialCommand)) {
+                        completions.add("discord");
+                    }
+                }
+            }
+
             return completions;
 
         } else if (args.length == 2) {
@@ -229,6 +315,27 @@ public class McPanelXCommand extends Command implements TabExecutor {
                     if ("show".startsWith(partialCommand)) {
                         completions.add("show");
                     }
+                }
+            }
+            if (Config.getSetting().getBoolean("Discord.enabled")) {
+                if (subCommand.equals("discord")) {
+                    if (sender.hasPermission("mcpanelx.discord.link")) {
+                        if ("link".startsWith(partialCommand)) {
+                            completions.add("link");
+                        }
+                    }
+
+                    if (sender.hasPermission("mcpanelx.discord.unlink")) {
+                        if ("unlink".startsWith(partialCommand)) {
+                            completions.add("unlink");
+                        }
+                    }
+
+                    if (sender.hasPermission("mcpanelx.discord.invite")) {
+                        if ("invite".startsWith(partialCommand)) {
+                            completions.add("invite");
+                        }
+                    }   
                 }
             }
 

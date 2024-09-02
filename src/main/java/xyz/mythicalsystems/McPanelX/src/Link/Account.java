@@ -56,6 +56,7 @@ public class Account {
                 updateIP(player);
                 markPlayerAsOnline(player);
                 Logins.add(uuid, ipAddress, brandName, VersionTranslator.translate(version));
+                //McPanelX.logger.info("Account",  "Added player to users list"+generatePin());
             } catch (Exception e) {
                 McPanelX.logger.error("Account", "Failed to add player to users list"+e.getMessage());
                 player.disconnect(new TextComponent(ChatTranslator.Translate(Messages.getMessage().getString("Error.ErrorOnJoin"))));
@@ -143,10 +144,11 @@ public class Account {
                 Connection connection = McPanelX.connection;
                 PreparedStatement statement = connection.prepareStatement(
                         "UPDATE `mcpanelx_users` SET `last_seen` = CURRENT_TIMESTAMP WHERE `uuid` = ?");
+
                 statement.setString(1, player.getUniqueId().toString());
                 statement.executeUpdate();
                 statement.close();
-
+                
             } catch (Exception e) {
                 McPanelX.logger.error("Account", "(updateLastSeen) Failed to connect to the database");
             }
@@ -342,6 +344,35 @@ public class Account {
 
         } catch (Exception e) {
             McPanelX.logger.error("Account", "(markHoleServerAsOffline) Failed to connect to the database");
+        }
+    }
+
+    /**
+     * Check if a user exists
+     * 
+     * @param token The token to check
+     * 
+     * @return boolean
+     */
+    public static boolean doesUserExist(String token) {
+        try {
+            PreparedStatement statement = McPanelX.connection.prepareStatement(
+                    "SELECT * FROM `mcpanelx_users` WHERE `token` = ?");
+            statement.setString(1, token);
+            ResultSet result = statement.executeQuery();
+
+            if (!result.next()) {
+                result.close();
+
+                return false;
+            } else {
+                result.close();
+
+                return true;
+            }
+        } catch (Exception e) {
+            McPanelX.logger.error("Account", "(doesUserExist) Failed to connect to the database");
+            return false;
         }
     }
 }

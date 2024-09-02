@@ -49,3 +49,9 @@ buildNumber.properties
 /development/plugins/McPanelX-Core-*.jar
 /development/plugins/LuckPerms/*
 development/tools/*
+/development//flamecord.yml
+/development/*.mmdb
+/development/messages.yml
+/development/waterfall.yml
+/development/flamecord*
+development/plugins/SkinsRestorer/*

@@ -12,6 +12,7 @@ import xyz.mythicalsystems.McPanelX.events.ChatEvent;
 import xyz.mythicalsystems.McPanelX.events.JoinEvent;
 import xyz.mythicalsystems.McPanelX.events.LeaveEvent;
 import xyz.mythicalsystems.McPanelX.src.Config.Config;
+import xyz.mythicalsystems.McPanelX.src.Discord.Bot;
 import xyz.mythicalsystems.McPanelX.src.Link.Account;
 import xyz.mythicalsystems.McPanelX.src.Logger.Logger;
 import xyz.mythicalsystems.McPanelX.src.Messages.Messages;
@@ -42,6 +43,12 @@ public class McPanelX {
      * The mysql connection
      */
     public static Connection connection;
+
+    /**
+     * The discord bot
+     */
+    public static Bot bot;
+
     /**
      * Start the plugin
      */
@@ -77,7 +84,13 @@ public class McPanelX {
 
         //Register commands
         MinecraftPlugin.pluginManager.registerCommand(MinecraftPlugin.getInstance(), new McPanelXCommand());
-
+        
+        // Start the discord bot
+        if (Config.getSetting().getBoolean("Discord.enabled")) {
+            bot = new Bot();
+            bot.start();
+        }
+        
         // Show that the plugin is ready to go
         logger.info("McPanelX", "McPanelX is ready to go!");
         logger.info("McPanelX", "Startup took " + (System.currentTimeMillis() - startTime) + "ms");
@@ -90,6 +103,9 @@ public class McPanelX {
         logger.info("McPanelX", "McPanelX is stopping NOW!");
         Account.markHoleServerAsOffline();
         mysql.close();
+        if (Config.getSetting().getBoolean("Discord.enabled")) {
+            bot.stop();
+        }
         logger.info("McPanelX", "Goodbye!");
     }
 

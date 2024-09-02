@@ -12,6 +12,7 @@
 # You can also use the following placeholders:
 
 # {panel_url} - The url of the panel
+# {discord_url} - The url of the discord server
 
 Global:
   InvalidCommand: "{prefix}{textcolor}Invalid command! Use {secondarycolor}/mcpanelx help{textcolor} to see the available commands!"
@@ -26,10 +27,26 @@ Help:
   login: "{textcolor}Get a login token for the {maincolor}McPanelX{textcolor} web!"
   tokenReset: "{textcolor}Reset your current {maincolor}token{textcolor}!"
   tokenShow: "{textcolor}Show your current {maincolor}token{textcolor}!"
+  discordLink: "{textcolor}Get a discord pin to link your discord account!"
+  discordUnlink: "{textcolor}Unlink your discord account from the panel!"
+  discordInvite: "{textcolor}Get an invite to the discord server!"
 
 Token:
   TokenReset: "{prefix}{textcolor}Your {maincolor}token{textcolor} has been reset!"
   TokenShow: "{prefix}{textcolor}Your current {maincolor}token{textcolor} is: {secondarycolor}{token}{textcolor}!"
 
 Login:
-  Message: "{prefix}{textcolor}If you want to login inside the panel please go to {maincolor}{panel_url}/auth/login?token={token}{textcolor}!"
+  Message: "{prefix}{textcolor}If you want to login inside the panel please go to: {maincolor}{panel_url}/auth/login?token={token}"
+
+Discord:
+  Link: "{prefix}{textcolor}If you want to link your discord account please join our discord server and use the command {maincolor}/link {token}"
+  AlreadyLinked: "{prefix}{textcolor}Your discord account is already linked to the panel!"
+  NotLinked: "{prefix}{textcolor}Your discord account is not linked to the panel!"
+  Unlink: "{prefix}{textcolor}Your discord account was unlinked from the panel!"
+  Invite: "{prefix}{textcolor}If you want to join our discord server please use the following link: {maincolor}{discord_url}"
+  LoginRequired: 
+  - "{prefix}"
+  - "{textcolor}It looks like you are logging in from a new location!"
+  - "{textcolor}Either login to the panel or join our discord server and"
+  - "{textcolor}use the command {maincolor}/login {token}{textcolor} to!"
+  - "{textcolor}verify your identity and add this ip to the whitelist!"

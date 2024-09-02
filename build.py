@@ -28,7 +28,16 @@ if platform.system() == "Windows":
     print("Going to the development directory...")
     serverpath= f"{current_path}\\development"
     print(serverpath)
-    os.system(f"cd {serverpath} && tools\\jdk-22.0.1\\bin\\java.exe -jar BungeeCord.jar")
+    if (os.path.exists(serverpath)):
+        print("Server directory exists")
+    else:
+        print("Server directory does not exist")
+        exit()
+    print("Starting the server...")
+    if os.path.exists(os.path.join(serverpath, "FlameCord.jar")):
+        os.system(f"cd {serverpath} && tools\\jdk-22.0.1\\bin\\java.exe -jar FlameCord.jar")
+    else:
+        os.system(f"cd {serverpath} && tools\\jdk-22.0.1\\bin\\java.exe -jar BungeeCord.jar")
 else:
     # Linux specific code
     print("Running on Linux")

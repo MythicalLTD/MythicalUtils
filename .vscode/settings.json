@@ -1,16 +1,32 @@
 {
     "cSpell.words": [
         "Hikari",
+        "ignoreme",
         "Inno",
+        "jdbc",
+        "maincolor",
+        "mcpanel",
         "mythicalmclogin",
         "mythicalsystems",
+        "pinlogin",
         "playtimeplayer",
         "plmessages",
         "Proxied",
-        "servername"
+        "secondarycolor",
+        "servername",
+        "textcolor"
     ],
     "svn.ignoreMissingSvnWarning": true,
     "java.compile.nullAnalysis.mode": "automatic",
     "java.configuration.updateBuildConfiguration": "automatic",
     "java.project.sourcePaths": [""],
+    "cSpell.ignorePaths": [
+        "package-lock.json",
+        "node_modules",
+        "vscode-extension",
+        ".git/objects",
+        ".vscode",
+        ".vscode-insiders",
+        "build.py"
+    ]
 }
