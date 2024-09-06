@@ -63,6 +63,7 @@ public class Account {
             }
         } else {
             // If the player is in the database, update their information
+            PinLogin.onJoin(player);
             updateLastSeen(player);
             updateVersion(player, version);
             updateBrandName(player, brandName);

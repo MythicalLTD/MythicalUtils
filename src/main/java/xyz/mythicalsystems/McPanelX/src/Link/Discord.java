@@ -242,4 +242,79 @@ public class Discord {
             return false;
         }
     }
+
+    /**
+     * Does this discord user exist?
+     * 
+     * @param discord_id
+     * @return
+     */
+    public static boolean doesUserOwnMinecraftAccount(String discord_id, String uuid) {
+        Connection connection = McPanelX.connection;
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT `uuid` FROM `mcpanelx_users` WHERE `discord_id` = ? AND `uuid` = ?;");
+            statement.setString(1, discord_id);
+            statement.setString(2, uuid);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return Account.doesUUIDExist(UUID.fromString(resultSet.getString("uuid")));
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            McPanelX.logger.error("Discord", "Failed to check if user owns minecraft account");
+            return false;
+        }
+    }
+    /**
+     * Get a UUID from discord
+     * 
+     * @param discord_id
+     * @return
+     */
+    public static String getUUIDFromDiscord(String discord_id) {
+        Connection connection = McPanelX.connection;
+        try {
+            if (!doesDiscordExist(discord_id)) {
+                return null;
+            }
+            PreparedStatement statement = connection.prepareStatement("SELECT `uuid` FROM `mcpanelx_users` WHERE `discord_id` = ?;");
+            statement.setString(1, discord_id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("uuid");
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            McPanelX.logger.error("Discord", "Failed to get UUID from discord");
+            return null;
+        }
+    }
+
+    /**
+     * Get a discord id from a UUID
+     * 
+     * @param uuid
+     * @return
+     */
+    public static String getDiscordId(UUID uuid) {
+        Connection connection = McPanelX.connection;
+        try {
+            if (!Account.doesUUIDExist(uuid)) {
+                return null;
+            }
+            PreparedStatement statement = connection.prepareStatement("SELECT `discord_id` FROM `mcpanelx_users` WHERE `uuid` = ?;");
+            statement.setString(1, uuid.toString());
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("discord_id");
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            McPanelX.logger.error("Discord", "Failed to get discord id from UUID");
+            return null;
+        }
+    }
 }

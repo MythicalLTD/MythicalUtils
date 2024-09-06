@@ -1,9 +1,10 @@
-[22:20:01 02.09.2024] INFO (McPanelX): Starting McPanelX
-[22:20:01 02.09.2024] INFO (Config): Config file created
-[22:20:01 02.09.2024] INFO (Messages): Config file created
-[22:20:01 02.09.2024] WARN (Main): You are running a pre-release build of McPanelX-Core. This version is not stable and may contain bugs.
-[22:20:02 02.09.2024] ERROR (MySQLConnector): Failed to connect to MySQL server: Communications link failure
-
-The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
-[22:20:03 02.09.2024] INFO (McPanelX): McPanelX is stopping NOW!
-[22:20:03 02.09.2024] ERROR (Account): (markHoleServerAsOffline) Failed to connect to the database
+[00:28:14 07.09.2024] INFO (McPanelX): Starting McPanelX
+[00:28:14 07.09.2024] INFO (Config): Config file created
+[00:28:14 07.09.2024] INFO (Messages): Config file created
+[00:28:14 07.09.2024] WARN (Main): You are running a pre-release build of McPanelX-Core. This version is not stable and may contain bugs.
+[00:28:15 07.09.2024] INFO (MySQLConnector): Connected to MySQL server
+[00:28:15 07.09.2024] INFO (MySQLConnector): Migrations were successful
+[00:28:15 07.09.2024] INFO (McPanelX): McPanelX is ready to go!
+[00:28:15 07.09.2024] INFO (McPanelX): Startup took 1101ms
+[00:28:17 07.09.2024] INFO (Bot): Connected to Discord as MythicalLogin#4192
+[00:28:17 07.09.2024] INFO (Bot): Open the following url to invite the bot: https://discord.com/oauth2/authorize?client_id=1273778945765933139&scope=bot%20applications.commands&permissions=0&prompt=consent

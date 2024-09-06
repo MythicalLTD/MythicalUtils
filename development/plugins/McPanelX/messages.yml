@@ -47,6 +47,6 @@ Discord:
   LoginRequired: 
   - "{prefix}"
   - "{textcolor}It looks like you are logging in from a new location!"
-  - "{textcolor}Either login to the panel or join our discord server and"
-  - "{textcolor}use the command {maincolor}/login {token}{textcolor} to!"
-  - "{textcolor}verify your identity and add this ip to the whitelist!"
+  - "{textcolor}Either login to the panel or join our dm our discord bot"
+  - "{textcolor}with the following text {maincolor}!login {token}{textcolor}"
+  - "{textcolor}to verify your identity and allow this ip to connect!!"

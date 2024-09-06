@@ -1,8 +1,8 @@
 package xyz.mythicalsystems.McPanelX.src.Discord.commands;
 
-
 import java.util.Arrays;
 
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.interaction.SlashCommand;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.SlashCommandOption;
@@ -11,7 +11,6 @@ import org.javacord.api.interaction.SlashCommandOptionType;
 import xyz.mythicalsystems.McPanelX.src.Config.Config;
 import xyz.mythicalsystems.McPanelX.src.Discord.Bot;
 import xyz.mythicalsystems.McPanelX.src.Link.Discord;
-
 
 public class LinkDiscordCommand extends Bot {
 
@@ -30,14 +29,29 @@ public class LinkDiscordCommand extends Bot {
                 if (Discord.doesPinExist(pin)) {
                     String user_id = interaction.getUser().getIdAsString();
                     if (Discord.isAccountLinked(user_id)) {
-                        interaction.createImmediateResponder().setContent("Your account is already linked!").respond();
+                        EmbedBuilder embed = new EmbedBuilder()
+                                .setTitle("Your account is already linked!")
+                                .setDescription("Your account is already linked!")
+                                .setColor(java.awt.Color.RED)
+                                .setFooter("MythicalSystems 2024");
+                        interaction.createImmediateResponder().addEmbed(embed).respond();
                     } else {
                         Discord.registerDiscord(pin, user_id);
-                        interaction.createImmediateResponder().setContent("Your account has been linked!").respond();
+                        EmbedBuilder embed = new EmbedBuilder()
+                                .setTitle("You have linked your account!")
+                                .setDescription("You have linked your account!")
+                                .setColor(java.awt.Color.GREEN)
+                                .setFooter("MythicalSystems 2024");
+                        interaction.createImmediateResponder().addEmbed(embed).respond();
                         Discord.removePin(user_id);
                     }
                 } else {
-                    interaction.createImmediateResponder().setContent("This pin is not valid in our database!").respond();
+                    EmbedBuilder embed = new EmbedBuilder()
+                            .setTitle("The pin you entered is invalid!")
+                            .setDescription("The pin you entered is invalid!")
+                            .setColor(java.awt.Color.RED)
+                            .setFooter("MythicalSystems 2024");
+                    interaction.createImmediateResponder().addEmbed(embed).respond();
                 }
             }
         });
