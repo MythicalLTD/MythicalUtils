@@ -11,6 +11,8 @@ import java.util.UUID;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import xyz.mythicalsystems.McPanelX.McPanelX;
+import xyz.mythicalsystems.McPanelX.MinecraftPlugin;
+import xyz.mythicalsystems.McPanelX.src.Config.Config;
 import xyz.mythicalsystems.McPanelX.src.Messages.Messages;
 import xyz.mythicalsystems.McPanelX.src.Translators.ChatTranslator;
 import xyz.mythicalsystems.McPanelX.src.Translators.VersionTranslator;
@@ -56,7 +58,8 @@ public class Account {
                 updateIP(player);
                 markPlayerAsOnline(player);
                 Logins.add(uuid, ipAddress, brandName, VersionTranslator.translate(version));
-                //McPanelX.logger.info("Account",  "Added player to users list"+generatePin());
+                AnnouncePlayerClient(player,brandName);
+
             } catch (Exception e) {
                 McPanelX.logger.error("Account", "Failed to add player to users list"+e.getMessage());
                 player.disconnect(new TextComponent(ChatTranslator.Translate(Messages.getMessage().getString("Error.ErrorOnJoin"))));
@@ -71,10 +74,33 @@ public class Account {
             updateIP(player);
             markPlayerAsOnline(player);
             Logins.add(uuid, ipAddress, brandName, VersionTranslator.translate(version));
+            AnnouncePlayerClient(player,brandName);
         }
 
     }
-
+    /**
+     * Announce a player to the client
+     * 
+     * @param player
+     * 
+     * @return void 
+     */
+    public static void AnnouncePlayerClient(ProxiedPlayer player, String brandName) {
+        if (Config.getSetting().getBoolean("AdminTools.AnnouncePlayerJoinClient") == false) {
+            return;
+        }
+        try {
+            McPanelX.logger.info("Account","Player "+player.getDisplayName()+" joined with client: "+brandName);
+            for (ProxiedPlayer p : MinecraftPlugin.getInstance().getProxy().getPlayers()) {
+                if (p.hasPermission("mcpanelx.admin.playerjoinclient")) {
+                    TextComponent message = new TextComponent(ChatTranslator.Translate(Messages.getMessage().getString("AdminTools.PlayerJoinedWithClient").replace("{player}", player.getDisplayName()).replace("{client}", brandName)));
+                    p.sendMessage(message);
+                }
+            }
+        } catch (Exception e) {
+            McPanelX.logger.error("Account", "Failed to announce player to client");
+        }
+    }
     /**
      * When a player leaves the server
      * 

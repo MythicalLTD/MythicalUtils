@@ -1,5 +1,7 @@
 package xyz.mythicalsystems.McPanelX.src.Discord;
 
+import java.time.Duration;
+
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
@@ -17,9 +19,13 @@ public class Bot {
     public static DiscordApi bot;
     public Server server;
     public static Bot instance;
+    public static String copyright = "Copyright %year% MythicalSystems!";
 
     public void start() {
         String str_token = Config.getSetting().getString("Discord.token");
+        int currentYear = java.time.Year.now().getValue();
+        copyright = copyright.replace("%year%", String.valueOf(currentYear));
+
         instance = this;
         new DiscordApiBuilder()
                 .setToken(str_token)
@@ -39,14 +45,21 @@ public class Bot {
         /**
          * Register commands here!
          */
+        McPanelX.logger.info("Bot", "Registering commands...");
+        McPanelX.logger.info("Bot", "Registering /help command...");
         HelpDiscordCommand.register("help", Messages.getMessage().getString("Bot.Commands.Help.Description"));
+        McPanelX.logger.info("Bot", "Registering /link command...");
         LinkDiscordCommand.register("link", Messages.getMessage().getString("Bot.Commands.Link.Description"));
-        UnLinkDiscordCommand.register("unlink", Messages.getMessage().getString("Bot.Commands.UnLink.Description"));
-
+        McPanelX.logger.info("Bot", "Registering /unlink command...");
+        UnLinkDiscordCommand.register("unlink", Messages.getMessage().getString("Bot.Commands.Unlink.Description"));
+        McPanelX.logger.info("Bot", "Commands registered!");
         /**
          * Register events here!
          */
+        McPanelX.logger.info("Bot", "Registering events...");
+        McPanelX.logger.info("Bot", "Registering OnDms event...");
         api.addMessageCreateListener(new OnDms());
+        McPanelX.logger.info("Bot", "Events registered!");
     }
     /**
      * This method is used to stop the bot!
@@ -67,6 +80,20 @@ public class Bot {
         bot.getUserById(user_id).thenAccept(user -> {
             user.sendMessage(message).thenAccept(sentMessage -> {
                 sentMessage.addReaction("\u2139");
+            });
+        });
+    }
+    /**
+     * This method is used to send a message to a user!
+     * 
+     * @param message
+     * @param user_id
+     */
+    public void sendMessageToUser(String message, String user_id) {
+        bot.getUserById(user_id).thenAccept(user -> {
+            user.sendMessage(message).thenAccept(sentMessage -> {
+                sentMessage.addReaction("\u2139");
+                sentMessage.deleteAfter(Duration.ofSeconds(3));
             });
         });
     }

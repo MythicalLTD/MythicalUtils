@@ -1,7 +1,7 @@
 # This file is used to store messages that are used in the plugin.
 # You can use the prefix and colors from the config.yml file.
 # You can also use the '&' symbol to color the text.
-# 
+#
 # You can also use the following placeholders:
 
 # {prefix} - The prefix of the plugin
@@ -21,7 +21,7 @@ Global:
   ErrorOnJoin: "{prefix}{textcolor}An error occurred while trying to join the server! Please try again later!"
   ReloadKickReason: "{prefix}{textcolor}The server is reloading! Please join again in a few seconds!"
 
-Help: 
+Help:
   help: "{textcolor}Show this help message!"
   reload: "{textcolor}Reload the {maincolor}McPanelX{textcolor} configuration!"
   login: "{textcolor}Get a login token for the {maincolor}McPanelX{textcolor} web!"
@@ -44,9 +44,74 @@ Discord:
   NotLinked: "{prefix}{textcolor}Your discord account is not linked to the panel!"
   Unlink: "{prefix}{textcolor}Your discord account was unlinked from the panel!"
   Invite: "{prefix}{textcolor}If you want to join our discord server please use the following link: {maincolor}{discord_url}"
-  LoginRequired: 
-  - "{prefix}"
-  - "{textcolor}It looks like you are logging in from a new location!"
-  - "{textcolor}Either login to the panel or join our dm our discord bot"
-  - "{textcolor}with the following text {maincolor}!login {token}{textcolor}"
-  - "{textcolor}to verify your identity and allow this ip to connect!!"
+  LoginRequired:
+    - "{prefix}"
+    - "{textcolor}It looks like you are logging in from a new location!"
+    - "{textcolor}Either login to the panel or join our dm our discord bot"
+    - "{textcolor}with the following text {maincolor}!login {token}{textcolor}"
+    - "{textcolor}to verify your identity and allow this ip to connect!!"
+
+
+AdminTools:
+  PlayerJoinedWithClient: "{prefix}{textcolor}Player {maincolor}{player}{textcolor} joined with {maincolor}{client}{textcolor} client!"
+
+Bot:
+  Commands:
+    Help:
+      Description: "Show this help message!"
+      Embed:
+        Title: "McPanelX Help Command"
+        Description: "Here are the available commands for McPanelX:"
+
+    Link:
+      Description: "Link your discord account to the panel!"
+      Args:
+        Pin:
+          Name: "pin"
+          Description: "The pin you received from the panel!"
+
+      AlreadyLinked:
+        Title: "Your account is already linked!"
+        Description: "Your discord account is already linked to the panel!"
+
+      Success:
+        Title: "You have been linked your account!"
+        Description: "Your account was successfully linked to the panel!"
+
+      InvalidPin:
+        Title: "Invalid Pin!"
+        Description: "The pin you provided is invalid! Please try again."
+
+    Unlink:
+      Description: "Unlink your discord account from the panel!"
+      Success:
+        Title: "You have been unlinked your account!"
+        Description: "Your account was successfully unlinked from the panel!"
+
+      NotLinked:
+        Title: "Your account is not linked!"
+        Description: "Your discord account is not linked to the panel!"
+
+    Login:
+      NotLinked:
+        Title: "You are not linked to any account!"
+        Description: "You are not linked to any account! Please link your account first!"
+
+      Success:
+        Title: "You have been logged in!"
+        Description: "You have been logged in successfully! You can now join the minecraft server!"
+
+      AnErrorOccurred:
+        Title: "An error occurred!"
+        Description: "An error occurred while trying to log you in! Please try again later!"
+
+      InvalidPin:
+        Title: "Invalid Pin!"
+        Description: "The pin you provided is invalid! Please try again."
+
+      NewRequest:
+        Title: "New login request!"
+        Description: "A new login request has been sent to your discord account! Please check your dm's!"
+        Name: "Name"
+        IP: "IP Address"
+        Date: "Date"

@@ -1,6 +1,7 @@
 package xyz.mythicalsystems.McPanelX;
 
 import java.sql.Connection;
+import java.util.concurrent.TimeUnit;
 
 import com.github.retrooper.packetevents.PacketEvents;
 
@@ -12,12 +13,14 @@ import xyz.mythicalsystems.McPanelX.events.ChatEvent;
 import xyz.mythicalsystems.McPanelX.events.JoinEvent;
 import xyz.mythicalsystems.McPanelX.events.LeaveEvent;
 import xyz.mythicalsystems.McPanelX.src.Config.Config;
+import xyz.mythicalsystems.McPanelX.src.Console.Console;
 import xyz.mythicalsystems.McPanelX.src.Discord.Bot;
 import xyz.mythicalsystems.McPanelX.src.Link.Account;
 import xyz.mythicalsystems.McPanelX.src.Logger.Logger;
 import xyz.mythicalsystems.McPanelX.src.Messages.Messages;
 import xyz.mythicalsystems.McPanelX.src.Metrics.Metrics;
 import xyz.mythicalsystems.McPanelX.src.MySQL.MySQLConnector;
+import xyz.mythicalsystems.McPanelX.src.Testing.Test;
 import xyz.mythicalsystems.McPanelX.src.Translators.ChatTranslator;
 import xyz.mythicalsystems.McPanelX.src.Translators.VersionTranslator;
 
@@ -63,11 +66,13 @@ public class McPanelX {
         // Initialize the messages
         Messages.init();
         // Initialize metrics
-        new Metrics(MinecraftPlugin.getInstance(),23007);
+        new Metrics(MinecraftPlugin.getInstance(), 23007);
         // Show plugin info
         VersionTranslator.TranslatePluginStartup();
         // Initialize the database connection!
-        mysql = new MySQLConnector(Config.getSetting().getString("Database.Host"),Config.getSetting().getString("Database.Port"),Config.getSetting().getString("Database.Database"),Config.getSetting().getString("Database.Username"),Config.getSetting().getString("Database.Password"));
+        mysql = new MySQLConnector(Config.getSetting().getString("Database.Host"),
+                Config.getSetting().getString("Database.Port"), Config.getSetting().getString("Database.Database"),
+                Config.getSetting().getString("Database.Username"), Config.getSetting().getString("Database.Password"));
         mysql.tryConnection();
         try {
             connection = mysql.getHikari().getConnection();
@@ -82,19 +87,27 @@ public class McPanelX {
         MinecraftPlugin.pluginManager.registerListener(MinecraftPlugin.getInstance(), new ChatEvent());
         PacketEvents.getAPI().getEventManager().registerListener(new JoinEvent());
 
-        //Register commands
+        // Register commands
         MinecraftPlugin.pluginManager.registerCommand(MinecraftPlugin.getInstance(), new McPanelXCommand());
-        
+
         // Start the discord bot
         if (Config.getSetting().getBoolean("Discord.enabled")) {
             bot = new Bot();
             bot.start();
         }
-        
+
+        // Create a scheduler task to run every 1 minute
+        MinecraftPlugin.getInstance().getProxy().getScheduler().schedule(MinecraftPlugin.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                Console.run();
+            }
+        }, 0, 60, TimeUnit.SECONDS);
+
         // Show that the plugin is ready to go
         logger.info("McPanelX", "McPanelX is ready to go!");
-        logger.info("McPanelX", "Startup took " + (System.currentTimeMillis() - startTime) + "ms");
-    }   
+        Test.run();
+    }
 
     /**
      * Stop the plugin
@@ -114,7 +127,8 @@ public class McPanelX {
      */
     public static void reload() {
         for (ProxiedPlayer player : MinecraftPlugin.getInstance().getProxy().getPlayers()) {
-            player.disconnect(new TextComponent(ChatTranslator.Translate(Messages.getMessage().getString("Global.ReloadKickReason"))));
+            player.disconnect(new TextComponent(
+                    ChatTranslator.Translate(Messages.getMessage().getString("Global.ReloadKickReason"))));
         }
         down();
         up();

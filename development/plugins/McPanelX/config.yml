@@ -22,6 +22,11 @@ Database:
   # The password of the database
   Password: "1234"
 
+# AdminTools is a system that can help McPanelX get some info about the player!
+AdminTools:
+  # Log with what client a player joins!
+  LogPlayerJoinClient: true
+
 # Logger is a system that can help McPanelX get some info about the player!
 Logger:
   # Log chat messages?
@@ -51,6 +56,3 @@ Discord:
   public_key: "eb3c95769af12d79b804465a0e6bd690c07a80228c84715b1794aa9b2ad90420"
   # Discord Invite
   invite: "https://discord.gg/mythicalsystems"
-
-IPInfo:
-  token: "f11ea3bcfe9335"

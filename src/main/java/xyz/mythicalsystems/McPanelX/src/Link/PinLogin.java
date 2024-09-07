@@ -85,20 +85,21 @@ public class PinLogin {
      * @param player
      */
     public static void sendJoinMessage(ProxiedPlayer player) {
+        Bot.getInstance().sendMessageToUser("<@"+Discord.getDiscordId(player.getUniqueId())+">",Discord.getDiscordId(player.getUniqueId()));
         InetSocketAddress socketAddress = (InetSocketAddress) player.getSocketAddress();
         String ipAddress = socketAddress.getAddress().getHostAddress();
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String date = formatter.format(System.currentTimeMillis());
         EmbedBuilder embedBuilder = new EmbedBuilder()
-                .setTitle("New login request!")
+                .setTitle(Messages.getMessage().getString("Bot.Commands.Login.NewRequest.Title"))
                 .setColor(Color.BLUE)
-                .setDescription("There is a new login request on your account!")
+                .setDescription(Messages.getMessage().getString("Bot.Commands.Login.NewRequest.Description"))
                 .setTimestampToNow()
-                .addField("Nickname", player.getDisplayName())
-                .addField("IP Address", ipAddress)
-                .addField("Date", date)
-                .setFooter("MythicalSystems 2024");
+                .addField(Messages.getMessage().getString("Bot.Commands.Login.NewRequest.Name"), player.getDisplayName())
+                .addField(Messages.getMessage().getString("Bot.Commands.Login.NewRequest.IP"), ipAddress)
+                .addField(Messages.getMessage().getString("Bot.Commands.Login.NewRequest.Date"), date)
+                .setFooter(Bot.copyright);
         Bot.getInstance()
                 .sendMessageToUser(embedBuilder, Discord.getDiscordId(player.getUniqueId()));
 

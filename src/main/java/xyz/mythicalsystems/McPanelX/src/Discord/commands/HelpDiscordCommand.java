@@ -8,7 +8,7 @@ import org.javacord.api.interaction.SlashCommandInteraction;
 
 import xyz.mythicalsystems.McPanelX.src.Config.Config;
 import xyz.mythicalsystems.McPanelX.src.Discord.Bot;
-
+import xyz.mythicalsystems.McPanelX.src.Messages.Messages;
 
 public class HelpDiscordCommand extends Bot {
 
@@ -20,16 +20,16 @@ public class HelpDiscordCommand extends Bot {
         bot.addSlashCommandCreateListener(event -> {
             SlashCommandInteraction interaction = event.getSlashCommandInteraction();
             if (interaction.getCommandName().equals(command.getName())) {
-                int currentYear = java.time.Year.now().getValue();
                 EmbedBuilder embed = new EmbedBuilder()
-                        .setTitle("Help Command")
-                        .setDescription("This is the main help command of the bot!")
-                        .addField("`/help`", "The help command of the bot!", true)
-                        .addField("`/link`", "Link your minecraft account!", true)
+                        .setTitle(Messages.getMessage().getString("Bot.Commands.Help.Embed.Title"))
+                        .setDescription(Messages.getMessage().getString("Bot.Commands.Help.Embed.Description"))
+                        .addField("`/help`", Messages.getMessage().getString("Bot.Commands.Help.Description"), true)
+                        .addField("`/link`", Messages.getMessage().getString("Bot.Commands.Link.Description"), true)
+                        .addField("`/unlink`", Messages.getMessage().getString("Bot.Commands.Unlink.Description"), true)
                         .setColor(Color.BLUE)
                         .setTimestampToNow()
-                        .setFooter("Copyright " + currentYear+" MythicalSystems!");
-                
+                        .setFooter(Bot.copyright);
+
                 interaction.createImmediateResponder().addEmbed(embed).respond();
             }
         });
