@@ -120,12 +120,6 @@ public final class MythicalSystemsUtils extends JavaPlugin {
                 "      Startup Time: " + (System.currentTimeMillis() - startTime) + "&7 ms"));
         getLogger().info("");
         getLogger().info("#========================================#");
-        long l1 = Runtime.getRuntime().freeMemory();
-        System.gc();
-        long l3;
-        if ((l3 = ((Runtime.getRuntime().freeMemory()) - l1) / 1024L / 1024L) > 0L)
-            getLogger().info(String.format("%d MB memory freed using Java garbage collector",
-                    new Object[] { Long.valueOf(l3) }));
     }
 
     /**

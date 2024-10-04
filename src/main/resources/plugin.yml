@@ -3,7 +3,6 @@ version: '${project.version}'
 main: xyz.mythicalsystems.mythicalsystemsutils.MythicalSystemsUtils
 load: STARTUP
 authors: [NaysKutzu]
-contributors: [wikmor, demirug, Bobcat00, Bram1903]
 description: A a simple lib / integration minecraft plugin for mythicalsystems tools :)!
 website: https://mythicalsystems.xyz
 softdepend: [Vault, PlaceholderAPI]
@@ -28,21 +27,12 @@ permissions:
     description: Allows players to type in chat with colors!
   mythicalsystemsutils.rgbcodes:
     description: Allows you to type in the chat with RGB codes!
-  mythicalsystemsutils.clearchat:
-    description: Clears the chat
-  mythicalsystemsutils.lockchat:
-    description: Locks the chat
-  mythicalsystemsutils.chatlock.bypass:
-    description: Allows a player to type in the chat if locked!
 
   mythicalsystemsutils.*:
     description: Gives access to all mythicalsystemsutils core commands!
     children:
       mythicalsystemsutils.version: true
       mythicalsystemsutils.help: true
-      mcoanelx.author: true
+      mythicalsystemsutils.author: true
       mythicalsystemsutils.rgbcodes: true
       mythicalsystemsutils.colorcodes: true
-      mythicalsystemsutils.clearchat: true
-      mythicalsystemsutils.lockchat: true
-      mythicalsystemsutils.chatlock.bypass: true

@@ -3,35 +3,26 @@ ConsolePlayers:
   - NaysKutzu
 LockedConsoleCommands:
   - plugman
-  - stop
-  - restart
 Messages:
   # Prefix
   Prefix: "YourServer &7> "
   NoPermission: "You do not have any permissions to run this command!"
-  OnlyForPlayers: "This command is only for ingame players!"
+  OnlyForPlayers: "This command is only for in game players!"
+
   # Console
   ConsoleSyntax: "Use: /console [Command]"
   LockedCommand: "This command is blocked!"
   Complete: "The command has been executed in the server console!!"
+
   # Join Messages
   JoinMessage: "%player% has joined the server!"
   LeaveMessage: "%player% has left the server!"
+
   # AntiUserSteal
   AntiUserSteal: "Why you trying to steal an user account?"
-  # AntiSyntax
-  AntiSyntax: "Sorry, but you can't use direct plugin syntax on the server"
-  # AntiCheat
-  KickFly: "[MythicalAC] You are not allowed to fly!"
-  # ClearChat
-  ClearChat: "Chat has been cleared by %mcpanelx_user%!"
+
   # Death Messages
   DeathMessage: "%player% has died!"
-  # ChatLock
-  ChatLocked: "Chat has been %mcpanelx_status% by %mcpanelx_user%!"
-  ChatLockedPlayer: "Chat has been locked by an administrator!"
-  ChatLockedStatusLocked: 'Locked'
-  ChatLockedStatusUnLocked: 'Unlocked'
 
 # Should we let users form the ConsolePlayers use their console?
 InGameConsole:
