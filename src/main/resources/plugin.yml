@@ -1,48 +1,48 @@
-name: McPanelX-Core
+name: MythicalSystemsUtils
 version: '${project.version}'
-main: me.mythicalsystems.mcpanelxcore.McPanelX_Core
+main: xyz.mythicalsystems.mythicalsystemsutils.MythicalSystemsUtils
 load: STARTUP
 authors: [NaysKutzu]
 contributors: [wikmor, demirug, Bobcat00, Bram1903]
-description: A minecraft plugin to control the MCPanelX Minecraft Panel!
-website: https://mythicalsystems.me
+description: A a simple lib / integration minecraft plugin for mythicalsystems tools :)!
+website: https://mythicalsystems.xyz
 softdepend: [Vault, PlaceholderAPI]
-depend: [LuckPerms, ViaVersion, packetevents]
+depend: [LuckPerms]
 commands:
   console:
     description: Execute commands into the server console
     aliases: [svc, cex, c]
-  mcpanelx:
-    description: The main command for McPanelX!
-    aliases: [mpx]
+  mythicalsystemsutils:
+    description: The main command for MythicalSystemsUtils!
+    aliases: [msu]
   chatformatter:
     aliases: [lpc, ctf]
 permissions:
-  mcpanelx.version:
+  mythicalsystemsutils.version:
     description: See the version of the plugin
-  mcpanelx.help:
+  mythicalsystemsutils.help:
     description: Get help with the plugin
-  mcpanelx.author:
+  mythicalsystemsutils.author:
     description: See who made the plugin
-  mcpanelx.colorcodes:
+  mythicalsystemsutils.colorcodes:
     description: Allows players to type in chat with colors!
-  mcpanelx.rgbcodes:
+  mythicalsystemsutils.rgbcodes:
     description: Allows you to type in the chat with RGB codes!
-  mcpanelx.clearchat:
+  mythicalsystemsutils.clearchat:
     description: Clears the chat
-  mcpanelx.lockchat:
+  mythicalsystemsutils.lockchat:
     description: Locks the chat
-  mcpanelxcore.chatlock.bypass:
+  mythicalsystemsutils.chatlock.bypass:
     description: Allows a player to type in the chat if locked!
 
-  mcpanelx.*:
-    description: Gives access to all McPanelX core commands!
+  mythicalsystemsutils.*:
+    description: Gives access to all mythicalsystemsutils core commands!
     children:
-      mcpanelx.version: true
-      mcpanelx.help: true
+      mythicalsystemsutils.version: true
+      mythicalsystemsutils.help: true
       mcoanelx.author: true
-      mcpanelx.rgbcodes: true
-      mcpanelx.colorcodes: true
-      mcpanelx.clearchat: true
-      mcpanelx.lockchat: true
-      mcpanelxcore.chatlock.bypass: true
+      mythicalsystemsutils.rgbcodes: true
+      mythicalsystemsutils.colorcodes: true
+      mythicalsystemsutils.clearchat: true
+      mythicalsystemsutils.lockchat: true
+      mythicalsystemsutils.chatlock.bypass: true

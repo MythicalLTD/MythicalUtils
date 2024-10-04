@@ -4,9 +4,10 @@
         "Gson",
         "IHTTP",
         "mcpanelxcore",
-        "mythicalsystems"
+        "mythicalsystems",
+        "mythicalsystemsutils"
     ],
-    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.configuration.updateBuildConfiguration": "automatic",
     "svn.ignoreMissingSvnWarning": true,
     "java.compile.nullAnalysis.mode": "automatic"
 }
